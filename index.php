@@ -18,11 +18,11 @@
                 <li class="flex items-center gap-2">
                     <button class="flex flex-col justify-center items-center space-y-[2px]">
                         <span
-                            class="bg-gray-500 block transition-all duration-300 ease-out h-0.5 w-3 rounded-sm"></span>
+                            class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
                         <span
-                            class="bg-gray-500 block transition-all duration-300 ease-out h-0.5 w-3 rounded-sm"></span>
+                            class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
                         <span
-                            class="bg-gray-500 block transition-all duration-300 ease-out h-0.5 w-3 rounded-sm"></span>
+                            class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
                     </button>
                     <span class="text-gray-500 font-semibold uppercase text-xs">Catalog</span>
                 </li>
@@ -38,28 +38,33 @@
             </ul>
         </nav>
         <div class="bg-gray-100 sm:px-6 flex justify-center mt-4">
-            <div class="flex flex-col justify-center items-center p-2 bg-white w-[150px]">
+            <div
+                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/bed.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">sleeping bed</h1>
             </div>
-            <div class="flex flex-col justify-center items-center p-2 bg-white w-[150px]">
+            <div
+                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/chair.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">chair</h1>
             </div>
-            <div class="flex flex-col justify-center items-center p-2 bg-white w-[150px]">
+            <div
+                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/chair-office.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">office chair</h1>
             </div>
-            <div class="flex flex-col justify-center items-center p-2 bg-white w-[150px]">
+            <div
+                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/table-picnic.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">table picnic</h1>
             </div>
-            <div class="flex flex-col justify-center items-center p-2 bg-white w-[150px]">
+            <div
+                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/kitchen-set.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">Kitchen set</h1>
             </div>
         </div>
-        <div class="mt-6 mb-6 border-b-[.45rem] p-6">
+        <div class="mt-6 mb-6 border-b-[.45rem] border-gray-100 p-6">
             <div class="flex justify-center items-center">
                 <div class="flex flex-1 space-x-4 items-center px-2">
                     <div>
@@ -68,7 +73,7 @@
                     </div>
                     <div>
                         <input type="checkbox" name="type" id="ottomans" value="ottomans" />
-                        <label for="chairs">Ottomans</label>
+                        <label for="ottomans">Ottomans</label>
                     </div>
                 </div>
                 <div class="flex flex-1 border-l-2 border-r-2 px-2 border-black/50">
@@ -107,51 +112,52 @@
                 <span>Price</span>
             </div>
         </header>
-        <div class="grid mt-4 gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 bg-green-100">
-            <div class="w-full col-span-1">
-                <div style="width: 200px; height: 200px; background-color: gray"></div>
-                <p>Lounge Chair</p>
-                <p>$5.178</p>
+        <div class="grid mt-4 gap-4 grid-cols-1 mb-6 border-gray-100 sm:grid-cols-2 md:grid-cols-4 p-4">
+            <div class="flex flex-col items-center">
+                <div class="w-full h-48 bg-gray-400"></div>
+                <p class="mt-2">Lounge Chair</p>
+                <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div>
-                <div style="width: 200px; height: 200px; background-color: gray"></div>
-                <p>Lounge Chair</p>
-                <p>$5.178</p>
+            <div class="flex flex-col items-center">
+                <div class="w-full h-48 bg-gray-400"></div>
+                <p class="mt-2">Lounge Chair</p>
+                <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div>
-                <div style="width: 200px; height: 200px; background-color: gray"></div>
-                <p>Lounge Chair</p>
-                <p>$5.178</p>
+            <div class="flex flex-col items-center">
+                <div class="w-full h-48 bg-gray-400"></div>
+                <p class="mt-2">Lounge Chair</p>
+                <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div>
-                <div style="width: 200px; height: 200px; background-color: gray"></div>
-                <p>Lounge Chair</p>
-                <p>$5.178</p>
+            <div class="flex flex-col items-center">
+                <div class="w-full h-48 bg-gray-400"></div>
+                <p class="mt-2">Lounge Chair</p>
+                <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div>
-                <div style="width: 200px; height: 200px; background-color: gray"></div>
-                <p>Lounge Chair</p>
-                <p>$5.178</p>
+            <div class="flex flex-col items-center">
+                <div class="w-full h-48 bg-gray-400"></div>
+                <p class="mt-2">Lounge Chair</p>
+                <p class="text-lg font-bold">$5,178</p>
             </div>
         </div>
-        <footer>
-            <h2>Show more chairs</h2>
+
+        <footer class=" border-t-[.45rem] p-4 flex justify-between pb-[4rem]">
+            <h2 class="cursor-pointer hover:underline">Show more chairs</h2>
             <div>
-                <span>&larr;</span>
-                <span>3</span>
-                <span>&rarr;</span>
+                <span class="text-lg text-gray-400">&larr;</span>
+                <span class="text-lg font-bold">3</span>
+                <span class="text-lg text-gray-400">&rarr;</span>
             </div>
         </footer>
     </main>
-    <footer>
+    <footer class="bg-gray-100 pt-14 pb-8 flex space-y-2 flex-col justify-center items-center">
         <div>
-            <ul>
-                <li>catalog</li>
-                <li>designers</li>
-                <li>blog</li>
-                <li>inspiration</li>
-                <li>about us</li>
-                <li>contact</li>
+            <ul class="flex gap-4 uppercase font-semibold">
+                <li class="cursor-pointer hover:underline">catalog</li>
+                <li class="cursor-pointer hover:underline">designers</li>
+                <li class="cursor-pointer hover:underline">blog</li>
+                <li class="cursor-pointer hover:underline">inspiration</li>
+                <li class="cursor-pointer hover:underline">about us</li>
+                <li class="cursor-pointer hover:underline">contact</li>
             </ul>
         </div>
         <p>&copy; 2024 .furniture All rights reserved</p>
