@@ -69,36 +69,43 @@
                 <div class="flex flex-1 space-x-4 items-center px-2">
                     <div>
                         <input type="checkbox" name="type" id="chairs" value="chairs" />
-                        <label for="chairs">Chairs</label>
+                        <label for="chairs" class="text-gray-700">Chairs</label>
                     </div>
                     <div>
                         <input type="checkbox" name="type" id="ottomans" value="ottomans" />
-                        <label for="ottomans">Ottomans</label>
+                        <label for="ottomans" class="text-gray-700">Ottomans</label>
                     </div>
                 </div>
+
                 <div class="flex flex-1 border-l-2 border-r-2 px-2 border-black/50">
-                    <select name="colors">
+                    <select name="colors"
+                        class="w-full text-gray-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400">
                         <option value="anycolors">Any Colors</option>
-                        <option value="red">red</option>
-                        <option value="blue">blue</option>
-                        <option value="green">green</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
                     </select>
                 </div>
+
                 <div class="flex flex-1 border-r-2 border-black/50 px-2">
-                    <select name="designer">
+                    <select name="designer"
+                        class="w-full text-gray-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400">
                         <option value="anydesigner">Any Designer</option>
-                        <option value="red">red</option>
-                        <option value="blue">blue</option>
-                        <option value="green">green</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
                     </select>
                 </div>
-                <div class="flex flex-1 gap-2 px-2">
-                    <span>Price</span>
-                    <input type="range" />
-                    <span>$9500</span>
+
+                <div class="flex flex-1 gap-2 px-2 items-center">
+                    <span class="text-gray-700">Price</span>
+                    <input type="range"
+                        class="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400" />
+                    <span class="text-gray-700">$9500</span>
                 </div>
             </div>
         </div>
+
     </header>
     <main>
         <header class="flex justify-between">
