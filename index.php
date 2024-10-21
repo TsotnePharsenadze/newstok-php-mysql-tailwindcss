@@ -49,7 +49,7 @@
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">chair</h1>
             </div>
             <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
+                class="flex flex-col justify-center items-center p-2 opacity-40 opacity-80 bg-white w-[150px]">
                 <img class="h-14 w-14 mt-4" src="./public/sharp-solid/chair-office.svg" />
                 <h1 class="uppercase font-bold text-xs mt-4 leading-6">office chair</h1>
             </div>
@@ -109,40 +109,40 @@
     </header>
     <main>
         <header class="flex justify-between">
-            <h1 class="text-3xl font-black">LOUNGE CHAIRS</h1>
+            <h1 class="text-3xl font-black uppercase">Office chairs</h1>
             <div>
                 <span>Sort by:</span>
-                <span class="font-black">Name</span>
+                <span class="font-black cursor-pointer hover:font-black">Name</span>
                 <span>&#129;</span>
-                <span>Popularity</span>
+                <span class="cursor-pointer hover:font-black">Popularity</span>
                 <span>&#129;</span>
-                <span>Price</span>
+                <span class="cursor-pointer hover:font-black">Price</span>
             </div>
         </header>
         <div class="grid mt-4 gap-4 grid-cols-1 mb-6 border-gray-100 sm:grid-cols-2 md:grid-cols-4 p-4">
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
                 <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Lounge Chair</p>
+                <p class="mt-2">Office chairs</p>
                 <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
                 <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Lounge Chair</p>
+                <p class="mt-2">Office chairs</p>
                 <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
                 <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Lounge Chair</p>
+                <p class="mt-2">Office chairs</p>
                 <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
                 <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Lounge Chair</p>
+                <p class="mt-2">Office chairs</p>
                 <p class="text-lg font-bold">$5,178</p>
             </div>
-            <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
                 <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Lounge Chair</p>
+                <p class="mt-2">Office chairs</p>
                 <p class="text-lg font-bold">$5,178</p>
             </div>
         </div>
