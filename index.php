@@ -1,3 +1,9 @@
+<?php
+include "./db/db.php";
+include "./helpers/icons.php";
+$result2 = $conn->query("SELECT DISTINCT category from furniture");
+$category = $_GET["category"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +21,7 @@
     <header class="flex flex-col">
         <nav>
             <ul class="flex justify-between">
-                <li class="flex items-center gap-2">
+                <li class="flex items-center gap-2 cursor-pointer">
                     <button class="flex flex-col justify-center items-center space-y-[2px]">
                         <span
                             class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
@@ -38,31 +44,23 @@
             </ul>
         </nav>
         <div class="bg-gray-100 sm:px-6 flex justify-center mt-4">
-            <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
-                <img class="h-14 w-14 mt-4" src="./public/sharp-solid/bed.svg" />
-                <h1 class="uppercase font-bold text-xs mt-4 leading-6">sleeping bed</h1>
-            </div>
-            <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
-                <img class="h-14 w-14 mt-4" src="./public/sharp-solid/chair.svg" />
-                <h1 class="uppercase font-bold text-xs mt-4 leading-6">chair</h1>
-            </div>
-            <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 opacity-80 bg-white w-[150px]">
-                <img class="h-14 w-14 mt-4" src="./public/sharp-solid/chair-office.svg" />
-                <h1 class="uppercase font-bold text-xs mt-4 leading-6">office chair</h1>
-            </div>
-            <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
-                <img class="h-14 w-14 mt-4" src="./public/sharp-solid/table-picnic.svg" />
-                <h1 class="uppercase font-bold text-xs mt-4 leading-6">table picnic</h1>
-            </div>
-            <div
-                class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px]">
-                <img class="h-14 w-14 mt-4" src="./public/sharp-solid/kitchen-set.svg" />
-                <h1 class="uppercase font-bold text-xs mt-4 leading-6">Kitchen set</h1>
-            </div>
+            <?php
+            if ($result2->num_rows > 0) {
+                while ($row = $result2->fetch_assoc()) { ?>
+                    <div class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px] cursor-pointer <?php if ($category == null) {
+                        $category = strtolower($row["category"]);
+                        echo "opacity-80 bg-white";
+                    } else {
+                        if ($category == strtolower($row["category"])) {
+                            echo "opacity-80 bg-white";
+                        }
+                    }
+                    ?>" onclick="changeCategory('<?php echo strtolower($row['category']); ?>')">
+                        <img class="h-14 w-14 mt-4" src=<?php echo $icon[$row["category"]]; ?> />
+                        <h1 class="uppercase font-bold text-xs mt-4 leading-6"><?php echo $row["category"] ?></h1>
+                    </div>
+                <?php }
+            } ?>
         </div>
         <div class="mt-6 mb-6 border-b-[.45rem] border-gray-100 p-6">
             <div class="flex justify-center items-center">
@@ -109,42 +107,34 @@
     </header>
     <main>
         <header class="flex justify-between">
-            <h1 class="text-3xl font-black uppercase">Office chairs</h1>
+            <h1 class="text-3xl font-black uppercase"><?php echo ucfirst($category); ?></h1>
             <div>
                 <span>Sort by:</span>
-                <span class="font-black cursor-pointer hover:font-black">Name</span>
-                <span>&#129;</span>
-                <span class="cursor-pointer hover:font-black">Popularity</span>
-                <span>&#129;</span>
-                <span class="cursor-pointer hover:font-black">Price</span>
+                <span class="font-black cursor-pointer hover:opacity-80">Name</span>
+                <span>&#183;</span>
+                <span class="cursor-pointer hover:opacity-80">Popularity</span>
+                <span>&#183;</span>
+                <span class="cursor-pointer hover:opacity-80">Price</span>
             </div>
         </header>
         <div class="grid mt-4 gap-4 grid-cols-1 mb-6 border-gray-100 sm:grid-cols-2 md:grid-cols-4 p-4">
-            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
-                <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Office chairs</p>
-                <p class="text-lg font-bold">$5,178</p>
-            </div>
-            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
-                <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Office chairs</p>
-                <p class="text-lg font-bold">$5,178</p>
-            </div>
-            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
-                <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Office chairs</p>
-                <p class="text-lg font-bold">$5,178</p>
-            </div>
-            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
-                <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Office chairs</p>
-                <p class="text-lg font-bold">$5,178</p>
-            </div>
-            <div class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
-                <div class="w-full h-48 bg-gray-400"></div>
-                <p class="mt-2">Office chairs</p>
-                <p class="text-lg font-bold">$5,178</p>
-            </div>
+            <?php
+            $stmt = $conn->prepare("SELECT * FROM furniture WHERE category = ?");
+            $stmt->bind_param("s", $category);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) { ?>
+                    <div
+                        class="flex flex-col items-center hover:scale-105 shadow-sm cursor-pointer hover:shadow-md transition-all pb-4">
+                        <div class="w-full h-48 bg-gray-400"></div>
+                        <p class="mt-2"><?php echo $row['name'] ?></p>
+                        <p class="text-lg font-bold">$<?php echo $row['price'] ?></p>
+                    </div>
+                <?php }
+            } else { ?>
+                <h1 class="col-span-4 text-center">No products found</h1>
+            <?php } ?>
         </div>
 
         <footer class=" border-t-[.45rem] p-4 flex justify-between pb-[4rem]">
@@ -169,6 +159,7 @@
         </div>
         <p>&copy; 2024 .furniture All rights reserved</p>
     </footer>
+    <script src="./scripts/main.js"></script>
 </body>
 
 </html>
