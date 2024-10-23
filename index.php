@@ -77,11 +77,6 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                 <?php }
             } ?>
             <?php
-            $stmt = $conn->prepare("SELECT COUNT(*) as data_count FROM furniture WHERE category = ?");
-            $stmt->bind_param("s", $category);
-            $stmt->execute();
-            $resultCount = $stmt->get_result();
-            $dataCount = $resultCount->fetch_assoc()["data_count"];
             ?>
         </div>
         <div class="mt-6 mb-6 border-b-[.45rem] border-gray-100 p-6">
@@ -180,6 +175,15 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                 $variables[] = $price;
             }
             $query .= "ORDER BY $sortBy DESC";
+            $stmt = $conn->prepare(str_replace("*", "COUNT(*) as data_count", $query));
+            $stmt->bind_param($types, ...$variables);
+            $stmt->execute();
+            $resultCount = $stmt->get_result();
+            $dataCount = $resultCount->fetch_assoc()["data_count"];
+            $query .= " LIMIT ? OFFSET ?";
+            $types .= "dd";
+            $variables[] = $pageSize;
+            $variables[] = $offset;
             $stmt = $conn->prepare($query);
             $stmt->bind_param($types, ...$variables);
             $stmt->execute();
