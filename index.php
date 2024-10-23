@@ -4,7 +4,7 @@ include "./helpers/icons.php";
 $pageSize = 12;
 $dataCount = null;
 if (isset($_GET["page"]) && is_numeric($_GET["page"]) && $_GET["page"] > 0) {
-    $page = (int)$_GET["page"];
+    $page = (int) $_GET["page"];
 } else {
     $page = 1;
 }
@@ -98,7 +98,6 @@ $price = $_GET["price"] ?? null;
                         ?>
                     </select>
                 </div>
-
                 <div class="flex flex-1 border-r-2 border-black/50 px-2">
                     <select name="designer"
                         class="w-full text-gray-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400">
@@ -122,6 +121,7 @@ $price = $_GET["price"] ?? null;
                     <span id="priceRange" class="text-gray-700">$<?php echo $resultPricesFetch["max_price"]; ?></span>
                 </div>
             </div>
+            <button type="button" onClick="filter()" class="bg-gray-900 text-gray-100 w-full py-1.5 rounded-md mt-4 hover:opacity-90 cursor-pointer">Filter</button>
         </div>
 
     </header>
