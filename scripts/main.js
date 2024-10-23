@@ -1,5 +1,7 @@
 function changeCategory(category) {
-  window.location.href = `?category=${category}`;
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set("category", category);
+  window.location.href = newUrl.toString();
 }
 
 function updateValue(value) {
@@ -30,5 +32,11 @@ function filter() {
   newUrl.searchParams.set("color", color);
   newUrl.searchParams.set("brand", brand);
   newUrl.searchParams.set("price", price);
+  window.location.href = newUrl.toString();
+}
+
+function sortBy(by) {
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set("sortBy", by);
   window.location.href = newUrl.toString();
 }

@@ -14,9 +14,10 @@ $resultBrands = $conn->query("SELECT DISTINCT brand from furniture");
 $resultPrices = $conn->query("SELECT MIN(price) as min_price, MAX(price) as max_price from furniture");
 $resultPricesFetch = $resultPrices->fetch_assoc();
 $category = $_GET["category"] ?? null;
-$colors = $_GET["colors"] ?? null;
-$brand = $_GET["brand"] ?? null;
-$price = $_GET["price"] ?? null;
+$color = $_GET["color"] ?? "anycolors";
+$brand = $_GET["brand"] ?? "anydesigners";
+$sortBy = $_GET["sortBy"] ?? "name";
+$price = $_GET["price"] ?? $resultPricesFetch["max_price"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +93,11 @@ $price = $_GET["price"] ?? null;
                         <?php
                         if ($resultColors->num_rows > 0) {
                             while ($row = $resultColors->fetch_assoc()) { ?>
-                                <option value="<?php echo $row["color"]; ?>"><?php echo ucfirst($row["color"]); ?></option>
+                                <option value="<?php echo $row["color"]; ?>" <?php
+                                   if ($row["color"] == $color) {
+                                       echo "selected";
+                                   }
+                                   ?>><?php echo ucfirst($row["color"]); ?></option>
                             <?php }
                         }
                         ?>
@@ -105,7 +110,11 @@ $price = $_GET["price"] ?? null;
                         <?php
                         if ($resultBrands->num_rows > 0) {
                             while ($row = $resultBrands->fetch_assoc()) { ?>
-                                <option value="<?php echo $row["brand"]; ?>"><?php echo ucfirst($row["brand"]); ?></option>
+                                <option value="<?php echo $row["brand"]; ?>" <?php
+                                   if ($row["brand"] == $brand) {
+                                       echo "selected";
+                                   }
+                                   ?>><?php echo ucfirst($row["brand"]); ?></option>
                             <?php }
                         }
                         ?>
@@ -115,13 +124,21 @@ $price = $_GET["price"] ?? null;
                 <div class="flex flex-1 gap-2 px-2 items-center">
                     <span class="text-gray-700">Price</span>
                     <input type="range" min="<?php echo $resultPricesFetch["min_price"]; ?>"
-                        max="<?php echo $resultPricesFetch["max_price"]; ?>"
-                        value="<?php echo $resultPricesFetch["max_price"]; ?>" oninput="updateValue(this.value)"
+                        max="<?php echo $resultPricesFetch["max_price"]; ?>" value="<?php if ($price !== $resultPricesFetch["max_price"]) {
+                               echo $price;
+                           } else {
+                               echo $resultPricesFetch["max_price"];
+                           } ?>" oninput="updateValue(this.value)"
                         class="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400" />
-                    <span id="priceRange" class="text-gray-700">$<?php echo $resultPricesFetch["max_price"]; ?></span>
+                    <span id="priceRange" class="text-gray-700">$<?php if ($price !== $resultPricesFetch["max_price"]) {
+                        echo $price;
+                    } else {
+                        echo $resultPricesFetch["max_price"];
+                    } ?></span>
                 </div>
             </div>
-            <button type="button" onClick="filter()" class="bg-gray-900 text-gray-100 w-full py-1.5 rounded-md mt-4 hover:opacity-90 cursor-pointer">Filter</button>
+            <button type="button" onClick="filter()"
+                class="bg-gray-900 text-gray-100 w-full py-1.5 rounded-md mt-4 hover:opacity-90 cursor-pointer">Filter</button>
         </div>
 
     </header>
@@ -130,11 +147,17 @@ $price = $_GET["price"] ?? null;
             <h1 class="text-3xl font-black uppercase"><?php echo ucfirst($category); ?></h1>
             <div>
                 <span>Sort by:</span>
-                <span class="font-black cursor-pointer hover:opacity-80">Name</span>
+                <span class="<?php if ($sortBy == 'name')
+                    echo "font-black "; ?> cursor-pointer hover:opacity-80"
+                    onClick="sortBy('name')">Name</span>
                 <span>&#183;</span>
-                <span class="cursor-pointer hover:opacity-80">Popularity</span>
+                <span class="<?php if ($sortBy == 'popularity')
+                    echo "font-black "; ?> cursor-pointer hover:opacity-80"
+                    onClick="sortBy('popularity')">Popularity</span>
                 <span>&#183;</span>
-                <span class="cursor-pointer hover:opacity-80">Price</span>
+                <span class="<?php if ($sortBy == 'price')
+                    echo "font-black "; ?> cursor-pointer hover:opacity-80"
+                    onClick="sortBy('price')">Price</span>
             </div>
         </header>
         <div class="grid mt-4 gap-4 grid-cols-1 mb-6 border-gray-100 sm:grid-cols-2 md:grid-cols-4 p-4">
