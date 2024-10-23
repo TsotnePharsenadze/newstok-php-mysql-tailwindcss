@@ -148,23 +148,40 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
             <div>
                 <span>Sort by:</span>
                 <span class="<?php if ($sortBy == 'name')
-                    echo "font-black "; ?> cursor-pointer hover:opacity-80"
-                    onClick="sortBy('name')">Name</span>
+                    echo "font-black "; ?> cursor-pointer hover:opacity-80" onClick="sortBy('name')">Name</span>
                 <span>&#183;</span>
                 <span class="<?php if ($sortBy == 'popularity')
                     echo "font-black "; ?> cursor-pointer hover:opacity-80"
                     onClick="sortBy('popularity')">Popularity</span>
                 <span>&#183;</span>
                 <span class="<?php if ($sortBy == 'price')
-                    echo "font-black "; ?> cursor-pointer hover:opacity-80"
-                    onClick="sortBy('price')">Price</span>
+                    echo "font-black "; ?> cursor-pointer hover:opacity-80" onClick="sortBy('price')">Price</span>
             </div>
         </header>
         <div class="grid mt-4 gap-4 grid-cols-1 mb-6 border-gray-100 sm:grid-cols-2 md:grid-cols-4 p-4">
             <?php
             $offset = ((int) $page - 1) * $pageSize;
-            $stmt = $conn->prepare("SELECT * FROM furniture WHERE category = ? LIMIT ? OFFSET ?");
-            $stmt->bind_param("sii", $category, $pageSize, $offset);
+            $query = "SELECT * FROM furniture WHERE category = ? ";
+            $types = "s";
+            $variables = [$category];
+            if ($color !== "anycolors") {
+                $query .= "AND color = ? ";
+                $types .= "s";
+                $variables[] = $color;
+            }
+            if ($brand !== "anydesigner") {
+                $query .= "AND brand = ? ";
+                $types .= "s";
+                $variables[] = $brand;
+            }
+            if ($price !== $resultPricesFetch["max_price"]) {
+                $query .= "AND price <= ? ";
+                $types .= "i";
+                $variables[] = $price;
+            }
+            $query .= "ORDER BY $sortBy DESC";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param($types, ...$variables);
             $stmt->execute();
             $result = $stmt->get_result();
             if ($result->num_rows > 0) {
