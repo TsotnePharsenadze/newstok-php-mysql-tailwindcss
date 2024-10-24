@@ -28,10 +28,12 @@ function filter() {
   let color = document.querySelector("select[name='colors']").value;
   let brand = document.querySelector("select[name='designer']").value;
   let price = document.querySelector("input[type='range']").value;
+  let search = document.querySelector("input[name='search']").value;
   const newUrl = new URL(window.location.href);
   newUrl.searchParams.set("color", color);
   newUrl.searchParams.set("brand", brand);
   newUrl.searchParams.set("price", price);
+  newUrl.searchParams.set("search", search);
   window.location.href = newUrl.toString();
 }
 
@@ -39,4 +41,10 @@ function sortBy(by) {
   const newUrl = new URL(window.location.href);
   newUrl.searchParams.set("sortBy", by);
   window.location.href = newUrl.toString();
+}
+
+function cart() {
+  // if (document.querySelector("#cartButton").attributes["aria-expanded"].value == "true") {
+  document.querySelector("#cartDropDown").classList.toggle("invisible");
+  // }
 }

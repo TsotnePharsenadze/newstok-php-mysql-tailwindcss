@@ -17,6 +17,7 @@ $category = $_GET["category"] ?? null;
 $color = $_GET["color"] ?? "anycolors";
 $brand = $_GET["brand"] ?? "anydesigners";
 $sortBy = $_GET["sortBy"] ?? "name";
+$search = $_GET["search"] ?? null;
 $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
 ?>
 <!DOCTYPE html>
@@ -30,22 +31,57 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="
+https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.9/src/index.min.js
+"></script>
+    <script>
+        tailwind.config = {
+            plugins: [
+                require('@tailwindcss/forms')
+            ]
+        }
+    </script>
 </head>
 
 <body class="p-1 md:p-6 max-w-[1000px] mx-auto w-full shadow-lg">
     <header class="flex flex-col">
         <nav>
             <ul class="flex justify-between">
-                <li class="flex items-center gap-2 cursor-pointer">
-                    <button class="flex flex-col justify-center items-center space-y-[2px]">
-                        <span
+                <li class="flex items-center gap-2 cursor-pointer hover:opacity-90" onclick="cart()">
+                    <div class="relative inline-block text-left">
+                        <div>
+                            <button type="button" id="cartButton" class="flex flex-col justify-center items-center space-y-[2px]" aria-expanded="false"
+                                aria-haspopup="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="w-4 h-4">
+                                    <path
+                                        d="M0 24C0 10.7 10.7 0 24 0L69.5 0c22 0 41.5 12.8 50.6 32l411 0c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3l-288.5 0 5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5L488 336c13.3 0 24 10.7 24 24s-10.7 24-24 24l-288.3 0c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5L24 48C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                                </svg>
+                                <!-- <span
                             class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
                         <span
                             class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
                         <span
-                            class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span>
-                    </button>
-                    <span class="text-gray-500 font-semibold uppercase text-xs">Catalog</span>
+                            class="bg-gray-500 block transition-all duration-400 ease-out h-0.5 w-3 rounded-sm"></span> -->
+                            </button>
+
+                        </div>
+                        <div id="cartDropDown" class="absolute left-0 z-[2000] m|t-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none invisible"
+                            role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                            <div class="py-1" role="none">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                    id="menu-item-0">Account settings</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                    id="menu-item-1">Support</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                    id="menu-item-2">License</a>
+                                <form method="POST" action="#" role="none">
+                                    <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-gray-700"
+                                        role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-gray-500 font-semibold uppercase text-xs">Cart</span>
                 </li>
                 <li class="font-black text-2xl">.furniture</li>
                 <li class="flex space-x-4 items-center">
@@ -54,7 +90,7 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                         <span class="font-semibold text-sm">555</span> <span>&#183;</span>
                         <span class="font-semibold text-sm">9255</span>
                     </div>
-                    <i class="fa fa-search"></i>
+                    <div class="w-6 h-6 bg-gray-600 rounded-full cursor-pointer"></div>
                 </li>
             </ul>
         </nav>
@@ -62,7 +98,7 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
             <?php
             if ($resultCategories->num_rows > 0) {
                 while ($row = $resultCategories->fetch_assoc()) { ?>
-                    <div class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px] cursor-pointer <?php if ($category == null) {
+                    <div class="flex flex-col justify-center items-center p-2 opacity-40 hover:opacity-80 hover:bg-white w-[150px] cursor-pointer hover:z-[0] <?php if ($category == null) {
                         $category = strtolower($row["category"]);
                         echo "opacity-80 bg-white";
                     } else {
@@ -115,7 +151,6 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                         ?>
                     </select>
                 </div>
-
                 <div class="flex flex-1 gap-2 px-2 items-center">
                     <span class="text-gray-700">Price</span>
                     <input type="range" min="<?php echo $resultPricesFetch["min_price"]; ?>"
@@ -131,6 +166,15 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                         echo $resultPricesFetch["max_price"];
                     } ?></span>
                 </div>
+            </div>
+            <div class="relative">
+                <i class="fa fa-search absolute z-55 top-[25px] right-4"></i>
+                <input type="text" name="search" placeholder="Search for item"
+                    class="w-full border-2 px-2 py-2.5 rounded-sm mt-2" value="<?php
+                    if ($search) {
+                        echo $search;
+                    }
+                    ?>" />
             </div>
             <button type="button" onClick="filter()"
                 class="bg-gray-900 text-gray-100 w-full py-1.5 rounded-md mt-4 hover:opacity-90 cursor-pointer">Filter</button>
@@ -174,6 +218,13 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
                 $types .= "i";
                 $variables[] = $price;
             }
+
+            if ($search) {
+                $query .= "AND name LIKE ? ";
+                $types .= "s";
+                $variables[] = '%' . $search . '%';
+            }
+
             $query .= "ORDER BY $sortBy DESC";
             $stmt = $conn->prepare(str_replace("*", "COUNT(*) as data_count", $query));
             $stmt->bind_param($types, ...$variables);
@@ -181,7 +232,7 @@ $price = $_GET["price"] ?? $resultPricesFetch["max_price"];
             $resultCount = $stmt->get_result();
             $dataCount = $resultCount->fetch_assoc()["data_count"];
             $query .= " LIMIT ? OFFSET ?";
-            $types .= "dd";
+            $types .= "ii";
             $variables[] = $pageSize;
             $variables[] = $offset;
             $stmt = $conn->prepare($query);
