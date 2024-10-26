@@ -1,0 +1,6 @@
+{
+    "require": {
+        "twbs/bootstrap": "5.0.2",
+        "google/apiclient": "2.0"
+    }
+}
