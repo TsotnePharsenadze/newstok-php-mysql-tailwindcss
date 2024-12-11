@@ -257,9 +257,9 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
                                 <td class="border p-4">
                                     <a href="news-crud/edit_news.php?id=<?php echo $row['id']; ?>"
-                                        class="text-blue-500">Edit</a> |
+                                        class="text-blue-500 hover:underline">Edit</a> |
                                     <a href="news-crud/delete_news.php?id=<?php echo $row['id']; ?>"
-                                        class="text-red-500">Delete</a>
+                                        class="text-red-500 hover:underline">Delete</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -387,9 +387,9 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
                                 <td class="border p-4">
                                     <a href="tags-crud/edit_tag.php?id=<?php echo $row['id']; ?>"
-                                        class="text-blue-500">Edit</a> |
+                                        class="text-blue-500 hover:underline">Edit</a> |
                                     <a href="tags-crud/delete_tag.php?id=<?php echo $row['id']; ?>"
-                                        class="text-red-500">Delete</a>
+                                        class="text-red-500 hover:underline">Delete</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>

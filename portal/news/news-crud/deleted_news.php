@@ -1,7 +1,7 @@
 <?php
 session_start();
 unset($_SESSION["HTTP_REFERER"]);
-include('../../db/db.php');
+include('../../../db/db.php');
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -20,7 +20,7 @@ if (!in_array($sort_column, $sortable_columns)) {
     $sort_column = 'createdAt';
 }
 
-$result = $conn->query("SELECT * FROM news WHERE sts <> '3' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset");
+$result = $conn->query("SELECT * FROM news WHERE sts = '3' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset");
 
 $total_result = $conn->query("SELECT COUNT(*) as total FROM news");
 $total_row = $total_result->fetch_assoc();
@@ -82,7 +82,7 @@ $total_pages = ceil($total_records / $limit);
         <?php
         if (!empty($_GET["msg"])) { ?>
             <div
-                class="msg bg-rose-200 w-full flex p-2 border-l-[10px] border-l-rose-400 rounded-md flex flex-col pr-6 pl-6 mb-2 mt-2">
+                class="msg bg-green-200 w-full flex p-2 border-l-[10px] border-l-green-400 rounded-md flex flex-col pr-6 pl-6 mb-2 mt-2">
                 <div class="flex justify-between mb-2">
                     <h1 class="font-bold text-2xl">Success</h1>
                     <span class="text-2xl cursor-pointer hover:opacity-80" onClick="clearMsg()">&times;</span>
@@ -110,7 +110,7 @@ $total_pages = ceil($total_records / $limit);
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <a href="news-crud/create_news.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted All
+                    <a href="hard_delete_news.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted All
                         Records Permanently</a>
                 </div>
             </div>
@@ -213,7 +213,7 @@ $total_pages = ceil($total_records / $limit);
                                 <td class="border p-4"><?php echo $row['description']; ?></td>
                                 <td class="border p-4">
                                     <span
-                                        class="<?php echo $row['sts'] == 1 ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"; ?> font-medium me-2 px-2.5 py-0.5 rounded uppercase"><?php echo $row['sts'] == 1 ? "drafted" : "published"; ?></span>
+                                        class="bg-rose-100 text-rose-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">deleted</span>
                                 </td>
                                 <td class="border p-4">
                                     <?php echo explode(".", $row["time"])[0]; ?>
@@ -221,10 +221,10 @@ $total_pages = ceil($total_records / $limit);
                                 <td class="border p-4"><?php echo explode(".", $row['createdAt'])[0]; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
                                 <td class="border p-4">
-                                    <a href="news-crud/edit_news.php?id=<?php echo $row['id']; ?>"
-                                        class="text-green-500">Recover</a> |
-                                    <a href="news-crud/delete_news.php?id=<?php echo $row['id']; ?>"
-                                        class="text-red-500">Delete</a>
+                                    <a href="recover_news.php?id=<?php echo $row['id']; ?>"
+                                        class="text-green-500 hover:underline">Recover</a> |
+                                    <a href="hard_delete_news.php?id=<?php echo $row['id']; ?>"
+                                        class="text-red-500 hover:underline">Delete Permanently</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
