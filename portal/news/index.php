@@ -142,7 +142,8 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <a href="news-crud/create_news.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted News
+                    <a href="news-crud/deleted_news.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted
+                        News
                         Records</a>
                     <a href="news-crud/create_news.php" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create
                         News</a>
