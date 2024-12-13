@@ -30,7 +30,7 @@ if (!isset($_SESSION['user_id'])) {
                 <a href="news"
                     class="w-[150px] h-[100px] bg-lime-600 text-white text-center pt-[23%] hover:opacity-80 relative">News<i
                         class="fa-solid fa-newspaper absolute -bottom-[10px] -right-[10px] text-6xl opacity-60"></i></a>
-                <a href="news"
+                <a href="gallery"
                     class="w-[150px] h-[100px] bg-blue-600 text-white text-center pt-[23%] hover:opacity-80 relative">Gallery<i
                         class="fa-solid fa-image absolute -bottom-[10px] -right-[10px] text-6xl opacity-60"></i></a>
                 <a href="news"
