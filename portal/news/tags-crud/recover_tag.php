@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("UPDATE tags SET sts='3', delete_date=current_timestamp() WHERE id = $id");
+    $conn->query("UPDATE tags SET sts='1', recovery_date=current_timestamp() WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Tag Deleted Successfully";
+        $ref .= "&msg=Tag Recovered Successfully";
     } else {
-        $ref .= "?msg=Tag Deleted Successfully";
+        $ref .= "?msg=Tag Recovered Successfully";
     }
     header("Location: $ref");
 }

@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$author_id = $_SESSION["user_id"];
 
 $ref = !isset($_SESSION["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $_SESSION["HTTP_REFERER"];
 $_SESSION["HTTP_REFERER"] = $ref;
@@ -20,7 +21,7 @@ $tagsTotal = $conn->query($sql);
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $result = $conn->query("SELECT * FROM news WHERE id = $id");
+    $result = $conn->query("SELECT * FROM news WHERE id = $id AND author_id='$author_id'");
     $news = $result->fetch_assoc();
 }
 

@@ -10,9 +10,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$author_id = $_SESSION["user_id"];
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("UPDATE news SET sts='1' WHERE id = $id");
+    $conn->query("UPDATE news SET sts='1', recovery_date=current_timestamp() WHERE id = $id AND author_id='$author_id'");
     if (strpos($ref, "?")) {
         $ref .= "&msg=News Recovered Successfully";
     } else {

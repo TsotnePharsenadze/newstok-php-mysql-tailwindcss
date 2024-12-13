@@ -4,9 +4,11 @@ unset($_SESSION["HTTP_REFERER"]);
 include('../../db/db.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
+
+$author_id = $_SESSION['user_id'];
 
 $limit = isset($_GET["pageSizeNews"]) ? (int) $_GET["pageSizeNews"] : 5;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -16,34 +18,82 @@ $limitTag = isset($_GET["pageSizeTags"]) ? (int) $_GET["pageSizeTags"] : 5;
 $pageTag = isset($_GET['pageTag']) ? (int) $_GET['pageTag'] : 1;
 $offsetTag = ($pageTag - 1) * $limitTag;
 
+$searchNews = isset($_GET["searchNews"]) ? $_GET["searchNews"] : "";
+$searchTags = isset($_GET["searchTags"]) ? $_GET["searchTags"] : "";
 
 $sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'createdAt';
 $sort_order = isset($_GET['order']) ? $_GET['order'] === 'desc' ? 'DESC' : 'ASC' : "DESC";
 $sortTag_column = isset($_GET['sortTag']) ? $_GET['sortTag'] : 'createdAt';
 $sortTag_order = isset($_GET['orderTag']) ? $_GET['orderTag'] === 'desc' ? 'DESC' : 'ASC' : "DESC";
 
-$sortable_columns = ['title', 'description', 'sts', 'time', 'createdAt', 'updatedAt'];
+$sortable_columns = ['title', 'description', 'sts', 'time', 'createdAt', 'updatedAt', "delete_date", "recovery_date"];
 if (!in_array($sort_column, $sortable_columns)) {
     $sort_column = 'createdAt';
 }
 
-$sortTagable_columns = ["id", "name", "createdAt", "updatedAt"];
+$sortTagable_columns = ["id", "name", "createdAt", "updatedAt", "delete_date", "recovery_date"];
 if (!in_array($sortTag_column, $sortTagable_columns)) {
-    $sort_column = 'createdAt';
+    $sortTag_column = 'createdAt';
 }
 
-$result = $conn->query("SELECT * FROM news WHERE sts <> '3' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset");
+$query = "SELECT * FROM news WHERE sts <> '3' AND (
+          title LIKE '%$searchNews%' 
+          OR description LIKE '%$searchNews%' ";
 
-$total_result = $conn->query("SELECT COUNT(*) as total FROM news");
+if ($searchNews == "drafted" or $searchNews == "published") {
+    $searchNewsSts = $searchNews == "drafted" ? 1 : 2;
+    $query .= " OR sts LIKE '%$searchNewsSts%'";
+}
+
+$query .= " OR time LIKE '%$searchNews%' 
+OR createdAt LIKE '%$searchNews%' 
+OR updatedAt LIKE '%$searchNews%' 
+OR delete_date LIKE '%$searchNews%' 
+OR recovery_date LIKE '%$searchNews%'
+) AND author_id='$author_id' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
+
+$result = $conn->query($query);
+
+$total_query = "SELECT COUNT(*) as total FROM news WHERE sts <> '3' AND (
+    title LIKE '%$searchNews%' 
+    OR description LIKE '%$searchNews%' ";
+
+if ($searchNews == "drafted" or $searchNews == "published") {
+    $searchNewsSts = $searchNews == "drafted" ? 1 : 2;
+    $total_query .= " OR sts LIKE '%$searchNewsSts%'";
+}
+
+$total_query .= " OR time LIKE '%$searchNews%' 
+OR createdAt LIKE '%$searchNews%' 
+OR updatedAt LIKE '%$searchNews%' 
+OR delete_date LIKE '%$searchNews%' 
+OR recovery_date LIKE '%$searchNews%'
+) AND author_id='$author_id' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
+
+$total_result = $conn->query($total_query);
+
 $total_row = $total_result->fetch_assoc();
-$total_records = $total_row['total'];
+$total_records = isset($total_row['total']) ? $total_row["total"] : 1;
 $total_pages = ceil($total_records / $limit);
 
-$resultTags = $conn->query("SELECT * FROM tags WHERE sts <> '3' ORDER BY $sortTag_column $sortTag_order LIMIT $limitTag OFFSET $offsetTag");
+$resultTags = $conn->query(" SELECT * FROM tags WHERE sts <> '3' AND (
+    name LIKE '%$searchTags%' 
+OR createdAt LIKE '%$searchTags%' 
+OR updatedAt LIKE '%$searchTags%' 
+OR delete_date LIKE '%$searchTags%' 
+OR recovery_date LIKE '%$searchTags%'
+)  ORDER BY $sortTag_column $sortTag_order LIMIT $limitTag OFFSET $offsetTag");
 
-$total_resultTags = $conn->query("SELECT COUNT(*) as total FROM tags WHERE sts <> '3'");
+$total_resultTags = $conn->query("SELECT COUNT(*) as total FROM tags WHERE sts <> '3' AND (
+    name LIKE '%$searchTags%' 
+OR createdAt LIKE '%$searchTags%' 
+OR updatedAt LIKE '%$searchTags%' 
+OR delete_date LIKE '%$searchTags%' 
+OR recovery_date LIKE '%$searchTags%'
+)  ORDER BY $sortTag_column $sortTag_order LIMIT $limitTag OFFSET $offsetTag");
+
 $total_rowTags = $total_resultTags->fetch_assoc();
-$total_recordsTags = $total_rowTags['total'];
+$total_recordsTags = isset($total_rowTags['total']) ? $total_rowTags["total"] : 1;
 $total_pagesTags = ceil($total_recordsTags / $limitTag);
 
 ?>
@@ -55,6 +105,9 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newstoks - News index</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+        integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function clearMsg() {
@@ -104,6 +157,17 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
             window.location.href = url.toString();
         }
 
+        function searchQuery(type = 0) {
+            const url = new URL(window.location.href);
+            if (!type) {
+                let value = document.querySelector("input[name='searchNews']").value;
+                url.searchParams.set("searchNews", value);
+            } else {
+                let value = document.querySelector("input[name='searchTags']").value;
+                url.searchParams.set("searchTags", value);
+            }
+            window.location.href = url.toString();
+        }
     </script>
 </head>
 
@@ -140,6 +204,13 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                         <option value="50" <?php echo $limit == 50 ? "selected" : ""; ?>>50 Records
                         </option>
                     </select>
+                </div>
+                <div class="flex items-center">
+                    <input type="search" name="searchNews" class="p-2 border-black border-[2px] rounded-md w-[300px]"
+                        placeholder="Search for news" value="<?php echo $searchNews; ?>" />
+                    <button onclick="searchQuery()"
+                        class="border-[2px] border-black bg-blue-500 text-white p-[0.5rem_0.9rem_0.5rem_0.9rem] ml-2 rounded-full hover:opacity-80 cursor-pointer">
+                        <i class="fa-solid fa-search"></i></button>
                 </div>
                 <div class="flex gap-2">
                     <a href="news-crud/deleted_news.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted
@@ -238,6 +309,35 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                     } ?>
                                 </div>
                             </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('delete_date', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Delete Date
+                                    </a>
+                                    <?php if ($sort_column == "delete_date") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('recovery_date', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Recovery Date
+                                    </a>
+                                    <?php if ($sort_column == "recovery_date") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+
                             <th class="border p-4 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -255,6 +355,20 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                 </td>
                                 <td class="border p-4"><?php echo explode(".", $row['createdAt'])[0]; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
+                                <td class="border p-4">
+                                    <?php if ($row["delete_date"]) {
+                                        echo explode(".", $row['delete_date'])[0];
+                                    } else {
+                                        echo "Null";
+                                    } ?>
+                                </td>
+                                <td class="border p-4">
+                                    <?php if ($row["recovery_date"]) {
+                                        echo explode(".", $row['recovery_date'])[0];
+                                    } else {
+                                        echo "Null";
+                                    } ?>
+                                </td>
                                 <td class="border p-4">
                                     <a href="news-crud/edit_news.php?id=<?php echo $row['id']; ?>"
                                         class="text-blue-500 hover:underline">Edit</a> |
@@ -308,8 +422,16 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                         </option>
                     </select>
                 </div>
+                <div class="flex items-center">
+                    <input type="search" name="searchTags" class="p-2 border-black border-[2px] rounded-md w-[300px]"
+                        placeholder="Search for tags" value="<?php echo $searchTags; ?>" />
+                    <button onclick="searchQuery(1)"
+                        class="border-[2px] border-black bg-blue-500 text-white p-[0.5rem_0.9rem_0.5rem_0.9rem] ml-2 rounded-full hover:opacity-80 cursor-pointer">
+                        <i class="fa-solid fa-search"></i></button>
+                </div>
                 <div class="flex gap-2">
-                    <a href="tags-crud/create_tag.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted Tag
+                    <a href="tags-crud/deleted_tag.php" class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted
+                        Tag
                         Records</a>
                     <a href="tags-crud/create_tag.php" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create
                         Tag</a>
@@ -375,6 +497,35 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                     } ?>
                                 </div>
                             </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('delete_date', '<?php echo $sortTag_order === 'ASC' ? 'desc' : 'asc'; ?>', 1)"
+                                        class="text-blue-500 w-full">
+                                        Delete Date
+                                    </a>
+                                    <?php if ($sortTag_column == "delete_date") {
+                                        echo $sortTag_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('recovery_date', '<?php echo $sortTag_order === 'ASC' ? 'desc' : 'asc'; ?>', 1)"
+                                        class="text-blue-500 w-full">
+                                        Recovery Date
+                                    </a>
+                                    <?php if ($sortTag_column == "recovery_date") {
+                                        echo $sortTag_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+
                             <th class="border p-4 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -385,6 +536,20 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                 <td class="border p-4"><?php echo $row['name']; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['createdAt'])[0]; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
+                                <td class="border p-4">
+                                    <?php if ($row["delete_date"]) {
+                                        echo explode(".", $row['delete_date'])[0];
+                                    } else {
+                                        echo "Null";
+                                    } ?>
+                                </td>
+                                <td class="border p-4">
+                                    <?php if ($row["recovery_date"]) {
+                                        echo explode(".", $row['recovery_date'])[0];
+                                    } else {
+                                        echo "Null";
+                                    } ?>
+                                </td>
                                 <td class="border p-4">
                                     <a href="tags-crud/edit_tag.php?id=<?php echo $row['id']; ?>"
                                         class="text-blue-500 hover:underline">Edit</a> |
@@ -420,6 +585,21 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
             </ul>
         </nav>
     </div>
+    <script>
+        let searchNewsInput = document.querySelector("input[name='searchNews']");
+        searchNewsInput.addEventListener("input", () => {
+            if (searchNewsInput.value === "") {
+                searchQuery();
+            }
+        })
+
+        let searchTagsInput = document.querySelector("input[name='searchTags']");
+        searchTagsInput.addEventListener("input", () => {
+            if (searchTagsInput.value === "") {
+                searchQuery(1);
+            }
+        })
+    </script>
 </body>
 
 </html>

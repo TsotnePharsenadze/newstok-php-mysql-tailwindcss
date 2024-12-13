@@ -27,11 +27,13 @@ if (isset($_GET['id'])) {
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($sql);
 
+    $author_id = $_SESSION["user_id"];
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $conn->query("DELETE FROM news WHERE sts='3'");
-            header("Location: deleted_news.php");
+            $conn->query("DELETE FROM news WHERE sts='3' AND author_id='$author_id'");
+            header("Location: deleted_news.php?msg=All Deleted News Deleted Permanently");
         } else {
             $err = "Incorrect password.";
         }
