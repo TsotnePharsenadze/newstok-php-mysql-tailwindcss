@@ -47,24 +47,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <header class="bg-blue-600 text-white py-4 shadow-md">
         <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between items-center">
             <div class="flex justify-between items-center w-full">
-                <h1 class="text-2xl font-bold">NewsTok</h1>
+                <a class="text-2xl font-bold" href="/index.php">NewsTok</a>
                 <button id="menu-button" class="sm:hidden text-white text-2xl focus:outline-none">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
             <nav id="menu" class="hidden sm:flex items-center space-x-4 sm:space-y-0 sm:flex-row flex-col">
-                <a href="#" class="hover:underline">Home</a>
-                <a href="#" class="hover:underline">World</a>
-                <a href="#" class="hover:underline">Politics</a>
-                <a href="#" class="hover:underline">Technology</a>
-                <a href="#" class="hover:underline">Sports</a>
+                <a href="#" class="hover:underline text-nowrap">Home (News)</a>
+                <a href="#" class="hover:underline text-nowrap">Gallery</a>
+                <a href="#" class="hover:underline text-nowrap">Contact Us</a>
+                <a href="#" class="hover:underline text-nowrap">About Us</a>
                 <div class="border flex items-center rounded-md">
-                    <a href="portal/login.php" class="hover:bg-blue-400 p-2 border-r">Login</a>
-                    <a href="portal/register.php" class="hover:bg-blue-400 p-2">Register</a>
+                    <a href="login.php" class="hover:bg-blue-400 bg-blue-400 p-2 border-r ">Login</a>
+                    <a href="register.php" class="hover:bg-blue-400 p-2">Register</a>
                 </div>
             </nav>
         </div>
     </header>
+
     <div class="h-[80vh] flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
             <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
