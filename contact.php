@@ -8,6 +8,19 @@ if (!isset($_SESSION["menu"])) {
     }
     $_SESSION["menu"] = $menuArray;
 }
+$err;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $message = $_POST["message"];
+    $result = $conn->query("INSERT INTO contact (name, email, message) VALUES ('$name', '$email', '$message')");
+
+    if ($result == TRUE) {
+        $_SESSION["contact_sent"] = time();
+    } else {
+        $err = "Error " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
