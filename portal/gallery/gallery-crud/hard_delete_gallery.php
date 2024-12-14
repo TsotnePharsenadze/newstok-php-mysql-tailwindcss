@@ -6,17 +6,17 @@ $ref = !isset($_SESSION["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $_SESSION[
 $_SESSION["HTTP_REFERER"] = $ref;
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit();
 }
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("DELETE FROM news WHERE id = $id");
+    $conn->query("DELETE FROM gallery WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=News Deleted Successfully";
+        $ref .= "&msg=Gallery Deleted Successfully";
     } else {
-        $ref .= "?msg=News Deleted Successfully";
+        $ref .= "?msg=Gallery Deleted Successfully";
     }
     header("Location: $ref");
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
@@ -32,8 +32,8 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $conn->query("DELETE FROM news WHERE sts='3' AND author_id='$author_id'");
-            header("Location: deleted_news.php?msg=All Deleted News Deleted Permanently");
+            $conn->query("DELETE FROM gallery WHERE sts='3' AND author_id='$author_id'");
+            header("Location: deleted_gallery.php?msg=All Deleted Gallery Items Deleted Permanently");
         } else {
             $err = "Incorrect password.";
         }

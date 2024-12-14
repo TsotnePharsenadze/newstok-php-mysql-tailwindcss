@@ -6,7 +6,7 @@ $ref = !isset($_SESSION["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : $_SESSION[
 $_SESSION["HTTP_REFERER"] = $ref;
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit();
 }
 

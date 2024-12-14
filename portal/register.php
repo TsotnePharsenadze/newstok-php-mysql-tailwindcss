@@ -36,6 +36,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 </head>
 
 <body class="bg-gray-100">
+    <header class="bg-blue-600 text-white py-4 shadow-md">
+        <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between items-center">
+            <div class="flex justify-between items-center w-full">
+                <h1 class="text-2xl font-bold">NewsTok</h1>
+                <button id="menu-button" class="sm:hidden text-white text-2xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            <nav id="menu" class="hidden sm:flex items-center space-x-4 sm:space-y-0 sm:flex-row flex-col">
+                <a href="#" class="hover:underline">Home</a>
+                <a href="#" class="hover:underline">World</a>
+                <a href="#" class="hover:underline">Politics</a>
+                <a href="#" class="hover:underline">Technology</a>
+                <a href="#" class="hover:underline">Sports</a>
+                <div class="border flex items-center rounded-md">
+                    <a href="portal/login.php" class="hover:bg-blue-400 p-2 border-r">Login</a>
+                    <a href="portal/register.php" class="hover:bg-blue-400 p-2">Register</a>
+                </div>
+            </nav>
+        </div>
+    </header>
 
     <div class="min-h-screen flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
@@ -75,6 +96,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         </div>
     </div>
 
-</body>
+    <script>
+        const menuButton = document.getElementById('menu-button');
+        const menu = document.getElementById('menu');
+        menuButton.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains("hidden")) {
+                menu.classList.remove("mt-2", "w-full", "flex", "items-baseline", "gap-2", "border", "p-2", "flex-col");
+            } else {
+                menu.classList.add("mt-2", "w-full", "flex", "items-baseline", "gap-2", "border", "p-2", "flex-col");
+            }
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 640) {
+                if (!menu.classList.contains("hidden")) {
+                    menu.classList.toggle('hidden');
+                    menu.classList.remove("mt-2", "w-full", "flex", "items-baseline", "gap-2", "border", "p-2", "flex-col");
+                }
+            };
+        });
+    </script>
 
 </html>

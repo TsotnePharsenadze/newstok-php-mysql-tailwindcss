@@ -121,7 +121,30 @@ $total_pages = ceil($total_records / $limit);
 
             window.location.href = url.toString();
         }
+
+        function openModal(src) {
+            document.querySelector("#imageModal").style.display = "flex";
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
     </script>
+    <style>
+        #button {
+            background: rgba(0, 0, 0);
+            padding: 10px 15px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #imageModal {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 p-4">
@@ -166,11 +189,11 @@ $total_pages = ceil($total_records / $limit);
                         <i class="fa-solid fa-search"></i></button>
                 </div>
                 <div class="flex gap-2">
-                    <a href="Gallery-crud/deleted_Gallery.php"
+                    <a href="gallery-crud/deleted_gallery.php"
                         class="bg-rose-500 text-white px-4 py-2 rounded-md">Deleted
                         Gallery
                         Records</a>
-                    <a href="Gallery-crud/create_Gallery.php" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create
+                    <a href="gallery-crud/create_gallery.php" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create
                         Gallery</a>
                 </div>
             </div>
@@ -304,15 +327,26 @@ $total_pages = ceil($total_records / $limit);
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td class="border p-4">
-                                    <img src="<?php
-                                    $filePathArray = explode("/", $row['file_path']);
-                                    $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
-                                    $filePathArraySearch = array_search("gallery", $filePathArray);
+                                    <div class="relative">
+                                        <img src="<?php
+                                        $filePathArray = explode("/", $row['file_path']);
+                                        $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
+                                        $filePathArraySearch = array_search("gallery", $filePathArray);
+                                        echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
+                                        ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
+                                            onclick="openModal(this.src)" />
+                                    </div>
 
-                                    echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
-                                    ?>" class="w-[250px] h-[250px] object-contain" />
+                                    <div id="imageModal"
+                                        class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+                                        <div class="relative">
+                                            <button id="button" onclick="closeModal()"
+                                                class="absolute top-2 right-2 text-white text-xl">X</button>
+                                            <img id="modalImage" src=""
+                                                class="max-w-[700px] max-h-[700px] object-contain" />
+                                        </div>
+                                    </div>
                                 </td>
-
                                 <td class="border p-4 whitespace-nowrap overflow-x-auto max-w-md">
                                     <div class="overflow-x-auto">
                                         <?php
@@ -348,9 +382,9 @@ $total_pages = ceil($total_records / $limit);
                                     } ?>
                                 </td>
                                 <td class="border p-4">
-                                    <a href="Gallery-crud/edit_Gallery.php?id=<?php echo $row['id']; ?>"
+                                    <a href="gallery-crud/edit_Gallery.php?id=<?php echo $row['id']; ?>"
                                         class="text-blue-500 hover:underline">Edit</a> |
-                                    <a href="Gallery-crud/delete_Gallery.php?id=<?php echo $row['id']; ?>"
+                                    <a href="gallery-crud/delete_gallery.php?id=<?php echo $row['id']; ?>"
                                         class="text-red-500 hover:underline">Delete</a>
                                 </td>
                             </tr>

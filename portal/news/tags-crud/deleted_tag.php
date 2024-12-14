@@ -4,7 +4,7 @@ unset($_SESSION["HTTP_REFERER"]);
 include('../../../db/db.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit();
 }
 
