@@ -2,6 +2,15 @@
 session_start();
 include('../db/db.php');
 
+if (!isset($_SESSION["menu"])) {
+    $result = $conn->query("SELECT * FROM menu ORDER BY ord ASC");
+    $menuArray = [];
+    while ($row = $result->fetch_assoc()) {
+        array_push($menuArray, $row);
+    }
+    $_SESSION["menu"] = $menuArray;
+}
+
 if (isset($_SESSION["user_id"])) {
     header("Location: dashboard.php");
     exit();
@@ -41,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NewsTok - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+        integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body class="bg-gray-100">
@@ -53,10 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 </button>
             </div>
             <nav id="menu" class="hidden sm:flex items-center space-x-4 sm:space-y-0 sm:flex-row flex-col">
-                <a href="#" class="hover:underline text-nowrap">Home (News)</a>
-                <a href="#" class="hover:underline text-nowrap">Gallery</a>
-                <a href="#" class="hover:underline text-nowrap">Contact Us</a>
-                <a href="#" class="hover:underline text-nowrap">About Us</a>
+                <?php
+                foreach ($_SESSION["menu"] as $menuItem) { ?>
+                    <a class="<?php echo $_SERVER["PHP_SELF"] == $menuItem["url"] ? "underline hover:no-underline " : "hover:underline "; ?> text-nowrap"
+                        href="<?php echo $menuItem["url"] ?>"><?php echo $menuItem["name"]; ?></a>
+                <?php }
+                ?>
                 <div class="border flex items-center rounded-md">
                     <a href="login.php" class="hover:bg-blue-400 bg-blue-400 p-2 border-r ">Login</a>
                     <a href="register.php" class="hover:bg-blue-400 p-2">Register</a>

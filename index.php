@@ -1,3 +1,15 @@
+<?php
+include("db/db.php");
+if (!isset($_SESSION["menu"])) {
+    $result = $conn->query("SELECT * FROM menu ORDER BY ord ASC");
+    $menuArray = [];
+    while ($row = $result->fetch_assoc()) {
+        array_push($menuArray, $row);
+    }
+    $_SESSION["menu"] = $menuArray;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,10 +34,12 @@
                 </button>
             </div>
             <nav id="menu" class="hidden sm:flex items-center space-x-4 sm:space-y-0 sm:flex-row flex-col">
-                <a href="#" class="hover:underline text-nowrap">Home (News)</a>
-                <a href="#" class="hover:underline text-nowrap">Gallery</a>
-                <a href="#" class="hover:underline text-nowrap">Contact Us</a>
-                <a href="#" class="hover:underline text-nowrap">About Us</a>
+                <?php
+                foreach ($_SESSION["menu"] as $menuItem) { ?>
+                    <a class="<?php echo $_SERVER["PHP_SELF"] == $menuItem["url"] ?  "underline hover:no-underline " :  "hover:underline "; ?> text-nowrap"
+                        href="<?php echo $menuItem["url"] ?>"><?php echo $menuItem["name"]; ?></a>
+                <?php }
+                ?>
                 <div class="border flex items-center rounded-md">
                     <a href="portal/login.php" class="hover:bg-blue-400 p-2 border-r">Login</a>
                     <a href="portal/register.php" class="hover:bg-blue-400 p-2">Register</a>
