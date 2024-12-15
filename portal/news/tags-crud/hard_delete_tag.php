@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
             $conn->query("DELETE FROM tags WHERE sts='3'");
             header("Location: deleted_tag.php?msg=All Deleted Tag Deleted Permanently");
         } else {
-            $err = "Incorrect password.";
+            $err = "Incorrect credentials.";
         }
     } else {
         $err = "User not found.";

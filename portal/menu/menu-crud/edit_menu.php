@@ -11,30 +11,35 @@ $ref = $_SESSION["HTTP_REFERER"] ?? $_SERVER["HTTP_REFERER"];
 $_SESSION["HTTP_REFERER"] = $ref;
 
 $err = '';
+$menu;
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $result = $conn->query("SELECT * FROM menu WHERE id = $id");
+    $menu = $result->fetch_assoc();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST["name"];
     $url = $_POST["url"][0] == "/" ? $_POST["url"] : "/" . $_POST["url"];
     $ord = intval($_POST["ord"]);
     $sts = intval($_POST["sts"]);
+    $menuId = $_POST["id"];
 
-    $stmt = $conn->prepare("INSERT INTO menu (name, url, sts, ord) 
-                                    VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssii", $name, $url, $sts, $ord);
+    $stmt = $conn->query("UPDATE menu SET name='$name', url='$url', sts='$sts', ord='$ord'WHERE id=$menuId");
 
-    if ($stmt->execute()) {
+    if ($stmt == TRUE) {
         if (strpos($ref, "?")) {
-            $ref .= "&msg=Menu item Created Successfully";
+            $ref .= "&msg=Menu item Edited Successfully";
         } else {
-            $ref .= "?msg=Menu item Created Successfully";
+            $ref .= "?msg=Menu item Edited Successfully";
         }
         unset($_SESSION["HTTP_REFERER"]);
         header("Location: $ref");
         exit();
     } else {
-        $err = "Database Error: " . $stmt->error;
+        $err = "Database Error: " . $conn->error;
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -61,33 +66,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" id="name" class="p-2 mr-2 border rounded-md w-full">
+                    <input type="text" name="name" id="name" class="p-2 mr-2 border rounded-md w-full"
+                        value="<?php echo $menu["name"] ?? ""; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="url" class="block text-sm font-medium text-gray-700">Url</label>
-                    <input type="text" name="url" id="url" class="p-2 mr-2 border rounded-md w-full">
+                    <input type="text" name="url" id="url" class="p-2 mr-2 border rounded-md w-full"
+                        value="<?php echo $menu["url"] ?? ""; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="ord" class="block text-sm font-medium text-gray-700">Order</label>
-                    <input type="number" name="ord" id="ord" class="p-2 mr-2 border rounded-md w-full" min="1">
+                    <input type="number" name="ord" id="ord" class="p-2 mr-2 border rounded-md w-full" min="1"
+                        value="<?php echo $menu["ord"] ?? ""; ?>" required>
                 </div>
                 <div class="mb-4">
                     <label for="sts" class="block text-sm font-medium text-gray-700">Status</label>
                     <div class="flex">
                         <div class="flex">
-                            <input type="radio" name="sts" id="sts1" class="p-2 mr-2 border rounded-md" value="1"
-                                checked>
+                            <input type="radio" name="sts" id="sts1" class="p-2 mr-2 border rounded-md" value="1" <?php echo $menu["sts"] == 1 ? "checked" : ""; ?>>
                             <label for="sts1"><span
                                     class="bg-blue-100 text-blue-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Unlisted</span></label>
                         </div>
                         <div class="flex">
-                            <input type="radio" name="sts" id="sts2" class="p-2 mr-2 border rounded-md" value="2">
+                            <input type="radio" name="sts" id="sts2" class="p-2 mr-2 border rounded-md" value="2" <?php echo $menu["sts"] == 2 ? "checked" : ""; ?>>
                             <label for="sts2"><span
                                     class="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Published</span></label>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Create</button>
+                <input type="hidden" name="id" value="<?php echo $menu["id"] ?>">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Edit </button>
             </form>
         </div>
         <p class="text-center text-red-400 mt-2 mb-2"><?php if (!empty($err))

@@ -61,15 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" id="name" class="p-2 mr-2 border rounded-md w-full">
+                    <input type="text" name="name" id="name" class="p-2 mr-2 border rounded-md w-full" required>
                 </div>
                 <div class="mb-4">
                     <label for="url" class="block text-sm font-medium text-gray-700">Url</label>
-                    <input type="text" name="url" id="url" class="p-2 mr-2 border rounded-md w-full">
+                    <input type="text" name="url" id="url" class="p-2 mr-2 border rounded-md w-full" required>
                 </div>
                 <div class="mb-4">
                     <label for="ord" class="block text-sm font-medium text-gray-700">Order</label>
-                    <input type="number" name="ord" id="ord" class="p-2 mr-2 border rounded-md w-full" min="1">
+                    <input type="number" name="ord" id="ord" class="p-2 mr-2 border rounded-md w-full" min="1" required>
                 </div>
                 <div class="mb-4">
                     <label for="sts" class="block text-sm font-medium text-gray-700">Status</label>

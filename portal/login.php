@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             $_SESSION["type"] = $user["type"];
             header("Location: dashboard.php");
         } else {
-            $err = "Incorrect password.";
+            $err = "Incorrect credentials.";
         }
     } else {
         $err = "User not found.";

@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("DELETE FROM gallery WHERE id = $id");
+    $conn->query("DELETE FROM Menu WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Gallery Deleted Successfully";
+        $ref .= "&msg=Menu Deleted Successfully";
     } else {
-        $ref .= "?msg=Gallery Deleted Successfully";
+        $ref .= "?msg=Menu Deleted Successfully";
     }
     header("Location: $ref");
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
@@ -27,15 +27,14 @@ if (isset($_GET['id'])) {
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($sql);
 
-    $author_id = $_SESSION["user_id"];
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $conn->query("DELETE FROM gallery WHERE sts='3' AND author_id='$author_id'");
-            header("Location: deleted_gallery.php?msg=All Deleted Gallery Items Deleted Permanently");
+            $conn->query("DELETE FROM Menu WHERE sts='3'");
+            header("Location: deleted_menu.php?msg=All Deleted Menu Items Deleted Permanently");
         } else {
-            $err = "Incorrect password.";
+            $err = "Incorrect credentials.";
         }
     } else {
         $err = "User not found.";

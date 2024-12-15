@@ -10,53 +10,55 @@ if (!isset($_SESSION['user_id'])) {
 
 $author_id = $_SESSION['user_id'];
 
-$limit = isset($_GET["pageSizeGallery"]) ? (int) $_GET["pageSizeGallery"] : 5;
+$limit = isset($_GET["pageSizeMenu"]) ? (int) $_GET["pageSizeMenu"] : 5;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-$searchGallery = isset($_GET["searchGallery"]) ? $_GET["searchGallery"] : "";
+$searchMenu = isset($_GET["searchMenu"]) ? $_GET["searchMenu"] : "";
 
 $sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'createdAt';
 $sort_order = isset($_GET['order']) ? $_GET['order'] === 'desc' ? 'DESC' : 'ASC' : "DESC";
 
-$sortable_columns = ['file_path', 'file_size', 'sts', 'time', 'createdAt', 'updatedAt', "delete_date", "recovery_date"];
+$sortable_columns = ['id', 'name', 'ord', 'url', 'sts', 'createdAt', 'updatedAt', "delete_date", "recovery_date"];
 if (!in_array($sort_column, $sortable_columns)) {
     $sort_column = 'createdAt';
 }
 
-$query = "SELECT * FROM gallery WHERE sts = '3' AND (
-          file_path LIKE '%$searchGallery%' 
-          OR file_size LIKE '%$searchGallery%' ";
+$query = "SELECT * FROM menu WHERE sts = '3' AND (
+    id LIKE '%$searchMenu%' 
+    OR name LIKE '%$searchMenu%' ";
 
-if ($searchGallery == "unlisted" or $searchGallery == "published") {
-    $searchGallerySts = $searchGallery == "unlisted" ? 1 : 2;
-    $query .= " OR sts LIKE '%$searchGallerySts%'";
+if ($searchMenu == "unlisted" or $searchMenu == "published") {
+    $searchMenuSts = $searchMenu == "unlisted" ? 1 : 2;
+    $query .= " OR sts LIKE '%$searchMenuSts%'";
 }
 
-$query .= " OR time LIKE '%$searchGallery%' 
-OR createdAt LIKE '%$searchGallery%' 
-OR updatedAt LIKE '%$searchGallery%' 
-OR delete_date LIKE '%$searchGallery%' 
-OR recovery_date LIKE '%$searchGallery%'
-) AND author_id='$author_id' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
+$query .= " OR url LIKE '%$searchMenu%' 
+OR ord LIKE '%$searchMenu%' 
+OR createdAt LIKE '%$searchMenu%' 
+OR updatedAt LIKE '%$searchMenu%' 
+OR delete_date LIKE '%$searchMenu%' 
+OR recovery_date LIKE '%$searchMenu%'
+) ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
 
 $result = $conn->query($query);
 
-$total_query = "SELECT COUNT(*) as total FROM gallery WHERE sts = '3' AND (
-    file_path LIKE '%$searchGallery%' 
-    OR file_size LIKE '%$searchGallery%' ";
+$total_query = "SELECT COUNT(*) as total FROM menu WHERE sts = '3' AND (
+id LIKE '%$searchMenu%' 
+OR name LIKE '%$searchMenu%' ";
 
-if ($searchGallery == "unlisted" or $searchGallery == "published") {
-    $searchGallerySts = $searchGallery == "unlisted" ? 1 : 2;
-    $total_query .= " OR sts LIKE '%$searchGallerySts%'";
+if ($searchMenu == "unlisted" or $searchMenu == "published") {
+    $searchMenuSts = $searchMenu == "unlisted" ? 1 : 2;
+    $total_query .= " OR sts LIKE '%$searchMenuSts%'";
 }
 
-$total_query .= " OR time LIKE '%$searchGallery%' 
-OR createdAt LIKE '%$searchGallery%' 
-OR updatedAt LIKE '%$searchGallery%' 
-OR delete_date LIKE '%$searchGallery%' 
-OR recovery_date LIKE '%$searchGallery%'
-) AND author_id='$author_id' ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
+$total_query .= " OR url LIKE '%$searchMenu%' 
+OR ord LIKE '%$searchMenu%' 
+OR createdAt LIKE '%$searchMenu%' 
+OR updatedAt LIKE '%$searchMenu%' 
+OR delete_date LIKE '%$searchMenu%' 
+OR recovery_date LIKE '%$searchMenu%'
+) ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
 
 $total_result = $conn->query($total_query);
 
@@ -72,7 +74,7 @@ $total_pages = ceil($total_records / $limit);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newstoks - Deleted Gallery index</title>
+    <title>Newstoks - Deleted Menu index</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
         integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
@@ -108,7 +110,7 @@ $total_pages = ceil($total_records / $limit);
 
             const url = new URL(window.location.href);
 
-            url.searchParams.set("pageSizeGallery", index);
+            url.searchParams.set("pageSizeMenu", index);
 
             window.location.href = url.toString();
         }
@@ -116,35 +118,12 @@ $total_pages = ceil($total_records / $limit);
         function searchQuery() {
             const url = new URL(window.location.href);
 
-            let value = document.querySelector("input[name='searchGallery']").value;
-            url.searchParams.set("searchGallery", value);
+            let value = document.querySelector("input[name='searchMenu']").value;
+            url.searchParams.set("searchMenu", value);
 
             window.location.href = url.toString();
         }
-
-        function openModal(src) {
-            document.querySelector("#imageModal").style.display = "flex";
-            document.getElementById('modalImage').src = src;
-            document.getElementById('imageModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = "none";
-        }
     </script>
-    <style>
-        #button {
-            background: rgba(0, 0, 0);
-            padding: 10px 15px;
-            border-radius: 9px;
-            border: none;
-            cursor: pointer;
-        }
-
-        #imageModal {
-            display: none;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100 p-4">
@@ -166,8 +145,8 @@ $total_pages = ceil($total_records / $limit);
         <div>
             <div class="flex justify-between items-center mb-6">
                 <div class="flex gap-4 items-centers flex-col sm:flex-row">
-                    <h2 class="text-2xl font-bold">Deleted Gallery List 📰</h2>
-                    <select name="pageSizeGallery" onchange="handlePageSizeSubmit(event, 1)"
+                    <h2 class="text-2xl font-bold">Deleted Menu List 🧲</h2>
+                    <select name="pageSizeMenu" onchange="handlePageSizeSubmit(event, 1)"
                         class="p-[0.3rem_0.7rem_0.3rem_0.7rem] text-lg border-[2px] border-black rounded-md font-semibold">
                         <option value="5" <?php echo $limit == 5 ? "selected" : ""; ?>>5 Records
                         </option>
@@ -182,15 +161,15 @@ $total_pages = ceil($total_records / $limit);
                     </select>
                 </div>
                 <div class="flex items-center">
-                    <input type="search" name="searchGallery" class="p-2 border-black border-[2px] rounded-md w-[300px]"
-                        placeholder="Search for Gallery" value="<?php echo $searchGallery; ?>" />
+                    <input type="search" name="searchMenu" class="p-2 border-black border-[2px] rounded-md w-[300px]"
+                        placeholder="Search for Menu" value="<?php echo $searchMenu; ?>" />
                     <button onclick="searchQuery()"
                         class="border-[2px] border-black bg-blue-500 text-white p-[0.5rem_0.9rem_0.5rem_0.9rem] ml-2 rounded-full hover:opacity-80 cursor-pointer">
                         <i class="fa-solid fa-search"></i></button>
                 </div>
                 <div class="flex gap-2">
                     <a href="<?php if ($total_records > 0) {
-                        echo "hard_delete_gallery.php";
+                        echo "hard_delete_Menu.php";
                     } else {
                         echo "javascript:void(0)";
                     } ?>" class="bg-rose-500 text-white px-4 py-2 rounded-md <?php if ($total_records == 0) {
@@ -206,17 +185,12 @@ $total_pages = ceil($total_records / $limit);
                         <tr class="w-full">
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
-                                    Preview
-                                </div>
-                            </th>
-                            <th class="border p-4 text-left">
-                                <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('file_path', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('id', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        File Path
+                                        Id
                                     </a>
-                                    <?php if ($sort_column == "file_path") {
+                                    <?php if ($sort_column == "id") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -226,11 +200,11 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('file_size', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('name', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        File Size
+                                        Name
                                     </a>
-                                    <?php if ($sort_column == "file_size") {
+                                    <?php if ($sort_column == "name") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -241,11 +215,11 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('sts', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('url', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        Status
+                                        Url
                                     </a>
-                                    <?php if ($sort_column == "sts") {
+                                    <?php if ($sort_column == "url") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -255,11 +229,25 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('time', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('ord', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        Time
+                                        Order
                                     </a>
-                                    <?php if ($sort_column == "time") {
+                                    <?php if ($sort_column == "ord") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('sts', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Status
+                                    </a>
+                                    <?php if ($sort_column == "sts") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -329,44 +317,13 @@ $total_pages = ceil($total_records / $limit);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class="border p-4">
-                                    <div class="relative">
-                                        <img src="<?php
-                                        $filePathArray = explode("/", $row['file_path']);
-                                        $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
-                                        $filePathArraySearch = array_search("gallery", $filePathArray);
-                                        echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
-                                        ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
-                                            onclick="openModal(this.src)" />
-                                    </div>
-
-                                    <div id="imageModal"
-                                        class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
-                                        <div class="relative">
-                                            <button id="button" onclick="closeModal()"
-                                                class="absolute top-2 right-2 text-white text-xl">X</button>
-                                            <img id="modalImage" src=""
-                                                class="max-w-[700px] max-h-[700px] object-contain" />
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="border p-4 whitespace-nowrap overflow-x-auto max-w-md">
-                                    <div class="overflow-x-auto">
-                                        <?php
-                                        $filePathArray = explode("/", $row['file_path']);
-                                        $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
-                                        $filePathArraySearch = array_search("gallery", $filePathArray);
-                                        echo implode("/", array_slice($filePathArray, $filePathArraySearch));
-                                        ?>
-                                    </div>
-                                </td>
-                                <td class="border p-4"><?php echo round(((int) $row['file_size']) / 1024, 1); ?> KB</td>
+                                <td class="border p-4"><?php echo $row["id"]; ?></td>
+                                <td class="border p-4"><?php echo $row["name"]; ?></td>
+                                <td class="border p-4"><?php echo $row["url"]; ?></td>
+                                <td class="border p-4"><?php echo $row["ord"]; ?></td>
                                 <td class="border p-4">
                                     <span
-                                        class="bg-rose-100 text-rose-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">deleted</span>
-                                </td>
-                                <td class="border p-4">
-                                    <?php echo explode(".", $row["time"])[0]; ?>
+                                        class="bg-rose-100 text-rose-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">delete</span>
                                 </td>
                                 <td class="border p-4"><?php echo explode(".", $row['createdAt'])[0]; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
@@ -385,9 +342,9 @@ $total_pages = ceil($total_records / $limit);
                                     } ?>
                                 </td>
                                 <td class="border p-4">
-                                    <a href="recover_gallery.php?id=<?php echo $row['id']; ?>"
+                                    <a href="recover_menu.php?id=<?php echo $row['id']; ?>"
                                         class="text-green-500 hover:underline">Recover</a> |
-                                    <a href="hard_delete_gallery.php?id=<?php echo $row['id']; ?>"
+                                    <a href="hard_delete_menu.php?id=<?php echo $row['id']; ?>"
                                         class="text-red-500 hover:underline">Delete Permanently</a>
                                 </td>
                             </tr>
@@ -420,9 +377,9 @@ $total_pages = ceil($total_records / $limit);
         </nav>
     </div>
     <script>
-        let searchGalleryInput = document.querySelector("input[name='searchGallery']");
-        searchGalleryInput.addEventListener("input", () => {
-            if (searchGalleryInput.value === "") {
+        let searchMenuInput = document.querySelector("input[name='searchMenu']");
+        searchMenuInput.addEventListener("input", () => {
+            if (searchMenuInput.value === "") {
                 searchQuery();
             }
         })

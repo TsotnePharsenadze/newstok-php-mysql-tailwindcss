@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
             $conn->query("DELETE FROM gallery WHERE sts='3' AND author_id='$author_id'");
             header("Location: deleted_gallery.php?msg=All Deleted Gallery Items Deleted Permanently");
         } else {
-            $err = "Incorrect password.";
+            $err = "Incorrect credentials.";
         }
     } else {
         $err = "User not found.";

@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
             $conn->query("DELETE FROM news WHERE sts='3' AND author_id='$author_id'");
             header("Location: deleted_news.php?msg=All Deleted News Deleted Permanently");
         } else {
-            $err = "Incorrect password.";
+            $err = "Incorrect credentials.";
         }
     } else {
         $err = "User not found.";
