@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 unset($_SESSION["HTTP_REFERER"]);
 include('../../db/db.php');
 
