@@ -345,8 +345,8 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class=" border p-4"><?php echo $row['title']; ?></td>
-                                <td class="border p-4"><?php echo $row['description']; ?></td>
+                                <td class=" border p-4 overflow-x-auto max-w-[280px]"><?php echo $row['title']; ?></td>
+                                <td class="border p-4 overflow-x-auto max-w-[280px]"><?php echo $row['description']; ?></td>
                                 <td class="border p-4">
                                     <span
                                         class="<?php echo $row['sts'] == 1 ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"; ?> font-medium me-2 px-2.5 py-0.5 rounded uppercase"><?php echo $row['sts'] == 1 ? "drafted" : "published"; ?></span>

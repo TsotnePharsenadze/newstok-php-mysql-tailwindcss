@@ -57,7 +57,7 @@ if (isset($_GET['id'])) {
 
     <div class="min-h-screen w-full flex justify-center items-center">
         <div class="flex-col w-[400px]">
-            <a href="deleted_news.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
+            <a href="deleted_gallery.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
             <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full mt-4">
                 <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
                 <form action="" method="POST">

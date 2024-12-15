@@ -326,7 +326,7 @@ $total_pages = ceil($total_records / $limit);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class="border p-4">
+                                <td class="border p-4  overflow-x-auto max-w-[280px]">
                                     <div class="relative">
                                         <img src="<?php
                                         $filePathArray = explode("/", $row['file_path']);
@@ -347,8 +347,8 @@ $total_pages = ceil($total_records / $limit);
                                         </div>
                                     </div>
                                 </td>
-                                <td class="border p-4 whitespace-nowrap overflow-x-auto max-w-md">
-                                    <div class="overflow-x-auto">
+                                <td class="border p-4 whitespace-nowrap overflow-x-auto max-w-[280px]">
+                                    <div class=" overflow-x-auto max-w-[280px]">
                                         <?php
                                         $filePathArray = explode("/", $row['file_path']);
                                         $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);

@@ -286,8 +286,9 @@ $total_pages = ceil($total_records / $limit);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class=" border p-4"><?php echo $row['title']; ?></td>
-                                <td class="border p-4"><?php echo $row['description']; ?></td>
+                                <td class=" border p-4  overflow-x-auto max-w-[280px]"><?php echo $row['title']; ?></td>
+                                <td class="border p-4  overflow-x-auto max-w-[280px]"><?php echo $row['description']; ?>
+                                </td>
                                 <td class="border p-4">
                                     <span
                                         class="bg-rose-100 text-rose-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">deleted</span>

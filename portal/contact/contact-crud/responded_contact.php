@@ -14,11 +14,11 @@ $author_id = $_SESSION["user_id"];
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("UPDATE gallery SET sts='3', delete_date=current_timestamp() WHERE id = $id AND author_id='$author_id'");
+    $conn->query("UPDATE contact SET sts='2', responded=current_timestamp() WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Gallery Deleted Successfully";
+        $ref .= "&msg=Contact Status Changed to Responded";
     } else {
-        $ref .= "?msg=Gallery Deleted Successfully";
+        $ref .= "?msg=Contact Status Changed to Responded";
     }
     header("Location: $ref");
 }

@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("DELETE FROM gallery WHERE id = $id");
+    $conn->query("DELETE FROM contact WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Gallery Deleted Successfully";
+        $ref .= "&msg=Contact Deleted Successfully";
     } else {
-        $ref .= "?msg=Gallery Deleted Successfully";
+        $ref .= "?msg=Contact Deleted Successfully";
     }
     header("Location: $ref");
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
@@ -27,13 +27,11 @@ if (isset($_GET['id'])) {
     $sql = "SELECT * FROM users WHERE email = '$email'";
     $result = $conn->query($sql);
 
-    $author_id = $_SESSION["user_id"];
-
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $conn->query("DELETE FROM gallery WHERE sts='3' AND author_id='$author_id'");
-            header("Location: deleted_gallery.php?msg=All Deleted Gallery Items Deleted Permanently");
+            $conn->query("DELETE FROM contact WHERE sts='3'");
+            header("Location: deleted_contact.php?msg=All Deleted Contact Items Deleted Permanently");
         } else {
             $err = "Incorrect credentials.";
         }
@@ -57,7 +55,7 @@ if (isset($_GET['id'])) {
 
     <div class="min-h-screen w-full flex justify-center items-center">
         <div class="flex-col w-[400px]">
-            <a href="deleted_news.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
+            <a href="deleted_contact.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
             <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full mt-4">
                 <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
                 <form action="" method="POST">

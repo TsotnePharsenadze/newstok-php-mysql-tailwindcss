@@ -33,12 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include("./layout/header.php");
 ?>
 <div class="flex items-center justify-center py-24">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md min-h-[494px]">
         <h1 class="text-2xl font-black text-gray-800 mb-6 text-center">Contact Us</h1>
         <?php
         if (isset($_SESSION["contact_sent"])) { ?>
             <div
-                class="msg bg-green-200 w-full flex p-2 border-l-[10px] border-l-green-400 rounded-md flex flex-col pr-6 pl-6 mb-2 mt-2">
+                class="msg bg-green-200 w-full flex p-2 border-l-[10px] border-l-green-400 rounded-md flex flex-col pr-6 pl-6 mb-2 mt-2 items-center justify-center mt-[30%]">
                 <div class="flex justify-between mb-2 flex-col items-baseline gap-2">
                     <h1 class="font-bold text-2xl">Your message has been received!</h1>
                     <p class="text-lg font-semibold">Sent at:
