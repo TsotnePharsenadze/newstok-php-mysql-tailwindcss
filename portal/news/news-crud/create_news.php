@@ -22,21 +22,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $author_id = $_SESSION["user_id"];
     $time = $_POST["date"];
     $tag_ids_str = implode(',', $tag_ids);
+    $newsId;
 
     $sql = "INSERT INTO news (title, description, text, keywords, tag_ids, time, sts, author_id) 
             VALUES ('$title', '$description', '$text', '$keywords', '$tag_ids_str', '$time', '$sts', '$author_id')";
 
     if ($conn->query($sql) === TRUE) {
-        if (strpos($ref, "?")) {
-            $ref .= "&msg=News Created Successfully";
-        } else {
-            $ref .= "?msg=News Created Successfully";
-        }
-        unset($_SESSION["HTTP_REFERER"]);
-        header("Location: $ref");
+        $newsId = $conn->insert_id;
     } else {
         $err = "Error: " . $conn->error;
     }
+
+    if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+        $file = $_FILES['file'];
+        $file_name = basename($file['name']);
+        $file_size = $file['size'];
+        $file_tmp = $file['tmp_name'];
+        $root_dir = $_SERVER['DOCUMENT_ROOT'];
+        $upload_dir = $root_dir . "/gallery/$time";
+        $author_id = $_SESSION["user_id"];
+
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+
+        $file_path = "$upload_dir/$file_name";
+        if (move_uploaded_file($file_tmp, $file_path)) {
+            $relative_path = $root_dir . "/gallery/$time/ $file_name";
+            $stmt = $conn->prepare("INSERT INTO gallery (file_path, file_size, time, sts, author_id, news_id) 
+                                    VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssiii", $relative_path, $file_size, $time, $sts, $author_id, $newsId);
+
+            if ($stmt->execute()) {
+                if (strpos($ref, "?")) {
+                    $ref .= "&msg=News Created Successfully";
+                } else {
+                    $ref .= "?msg=News Created Successfully";
+                }
+
+                unset($_SESSION["HTTP_REFERER"]);
+                header("Location: $ref");
+            } else {
+                $err = "Database Error: " . $stmt->error;
+            }
+        } else {
+            $err = "Failed to upload the file.";
+        }
+    } else {
+        $err = "No file uploaded or an error occurred.";
+    }
+
 }
 ?>
 
@@ -68,6 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         function goBack() {
             window.location.href = <?php echo json_encode($ref); ?>;
         }
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('preview');
+            const imagePreviewContainer = document.getElementById('imagePreview');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    imagePreviewContainer.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                imagePreviewContainer.classList.add('hidden');
+            }
+        }
     </script>
 </head>
 
@@ -77,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <a href="javascript:goBack()" class="text-blue-400 hover:underline">&lBarr; Go back</a>
             <hr class="mt-2 mb-2" />
             <h2 class="text-xl font-bold mb-4">Create News</h2>
-            <form action="create_news.php" method="POST">
+            <form action="create_news.php" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
                     <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
                     <input type="text" name="title" id="title" class="w-full p-2 border rounded-md" required>
@@ -86,6 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea name="description" id="description" class="w-full p-2 border rounded-md"
                         required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="file" class="block text-sm font-medium text-gray-700">Thumbnail</label>
+                    <input type="file" name="file" id="file" accept="image/*" required onchange="previewImage(event)" />
+                    <div id="imagePreview" class="mt-4 hidden">
+                        <p class="text-gray-600 text-sm">Preview:</p>
+                        <img id="preview" src="#" alt="Image Preview" class="w-full h-auto rounded shadow-md" />
+                    </div>
                 </div>
                 <div class="mb-4">
                     <label for="text" class="block text-sm font-medium text-gray-700">Text</label>

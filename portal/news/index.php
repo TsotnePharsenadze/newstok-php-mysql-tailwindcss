@@ -169,7 +169,30 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
             }
             window.location.href = url.toString();
         }
+
+        function openModal(src) {
+            document.querySelector("#imageModal").style.display = "flex";
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
     </script>
+    <style>
+        #button {
+            background: rgba(0, 0, 0);
+            padding: 10px 15px;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #imageModal {
+            display: none;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 p-4">
@@ -225,6 +248,11 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                 <table class="min-w-full border-collapse">
                     <thead>
                         <tr class="w-full">
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    Preview
+                                </div>
+                            </th>
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
@@ -343,8 +371,32 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <?php while ($row = $result->fetch_assoc()):
+                            $imageQuery = $conn->query("SELECT file_path from gallery WHERE news_id='" . $row["id"] . "'");
+                            $imageId = $imageQuery->fetch_assoc()["file_path"];
+                            ?>
                             <tr>
+                                <td class="border p-4  overflow-x-auto max-w-[280px]">
+                                    <div class="relative">
+                                        <img src="<?php
+                                        $filePathArray = explode("/", $imageId);
+                                        $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
+                                        $filePathArraySearch = array_search("gallery", $filePathArray);
+                                        echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
+                                        ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
+                                            onclick="openModal(this.src)" />
+                                    </div>
+
+                                    <div id="imageModal"
+                                        class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+                                        <div class="relative">
+                                            <button id="button" onclick="closeModal()"
+                                                class="absolute top-2 right-2 text-white text-xl">X</button>
+                                            <img id="modalImage" src=""
+                                                class="max-w-[700px] max-h-[700px] object-contain" />
+                                        </div>
+                                    </div>
+                                </td>
                                 <td class=" border p-4 overflow-x-auto max-w-[280px]"><?php echo $row['title']; ?></td>
                                 <td class="border p-4 overflow-x-auto max-w-[280px]"><?php echo $row['description']; ?></td>
                                 <td class="border p-4">
