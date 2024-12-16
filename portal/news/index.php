@@ -373,20 +373,29 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()):
                             $imageQuery = $conn->query("SELECT file_path from gallery WHERE news_id='" . $row["id"] . "'");
-                            $imageId = $imageQuery->fetch_assoc()["file_path"];
-                            ?>
+                            $imageId = $imageQuery->num_rows > 0 ? $imageQuery->fetch_assoc()["file_path"] : null; ?>
                             <tr>
                                 <td class="border p-4  overflow-x-auto max-w-[280px]">
-                                    <div class="relative">
-                                        <img src="<?php
-                                        $filePathArray = explode("/", $imageId);
-                                        $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
-                                        $filePathArraySearch = array_search("gallery", $filePathArray);
-                                        echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
-                                        ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
-                                            onclick="openModal(this.src)" />
-                                    </div>
-
+                                    <?php if ($imageId) { ?>
+                                        <div class="relative">
+                                            <img src="<?php
+                                            $filePathArray = explode("/", $imageId);
+                                            $filePathArray[count($filePathArray) - 1] = trim($filePathArray[count($filePathArray) - 1]);
+                                            $filePathArraySearch = array_search("gallery", $filePathArray);
+                                            echo '/gallery/' . implode("/", array_slice($filePathArray, $filePathArraySearch + 1));
+                                            ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
+                                                onclick="openModal(this.src)" />
+                                        </div>
+                                    <?php } else {
+                                        ?>
+                                        <div class="relative">
+                                            <img src="<?php
+                                            echo $row["thumbnail"];
+                                            ?>" class="w-[250px] h-[250px] object-contain cursor-pointer"
+                                                onclick="openModal(this.src)" />
+                                        </div>
+                                    <?php }
+                                    ?>
                                     <div id="imageModal"
                                         class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
                                         <div class="relative">
@@ -425,8 +434,14 @@ $total_pagesTags = ceil($total_recordsTags / $limitTag);
                                 <td class="border p-4">
                                     <a href="news-crud/edit_news.php?id=<?php echo $row['id']; ?>"
                                         class="text-blue-500 hover:underline">Edit</a> |
-                                    <a href="news-crud/delete_news.php?id=<?php echo $row['id']; ?>"
+                                    <a href="news-crud/delete_news.php?id=<?php echo $row['id']; ?>" |
                                         class="text-red-500 hover:underline">Delete</a>
+                                    <?php
+                                    if ($imageId) { ?>
+                                        <a href="../gallery/index.php?searchGallery=<?php echo $imageId; ?>"
+                                            class="text-green-500 hover:underline">View in Galery</a>
+                                    <?php }
+                                    ?>
                                 </td>
                             </tr>
                         <?php endwhile; ?>

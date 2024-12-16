@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tag_ids_str = implode(',', $tag_ids);
     $newsId;
 
-    $sql = "INSERT INTO news (title, description, text, keywords, tag_ids, time, sts, author_id) 
-            VALUES ('$title', '$description', '$text', '$keywords', '$tag_ids_str', '$time', '$sts', '$author_id')";
+    $sql = "INSERT INTO news (title, description, text, keywords, tag_ids, time, sts, author_id, thumbnail) 
+            VALUES ('$title', '$description', '$text', '$keywords', '$tag_ids_str', '$time', '$sts', '$author_id', '/gallery/default.webp')";
 
     if ($conn->query($sql) === TRUE) {
         $newsId = $conn->insert_id;
@@ -69,7 +69,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $err = "Failed to upload the file.";
         }
     } else {
-        $err = "No file uploaded or an error occurred.";
+        if (strpos($ref, "?")) {
+            $ref .= "&msg=News Created Successfully";
+        } else {
+            $ref .= "?msg=News Created Successfully";
+        }
+
+        unset($_SESSION["HTTP_REFERER"]);
+        header("Location: $ref");
     }
 
 }
@@ -141,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <div class="mb-4">
                     <label for="file" class="block text-sm font-medium text-gray-700">Thumbnail</label>
-                    <input type="file" name="file" id="file" accept="image/*" required onchange="previewImage(event)" />
+                    <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(event)" />
                     <div id="imagePreview" class="mt-4 hidden">
                         <p class="text-gray-600 text-sm">Preview:</p>
                         <img id="preview" src="#" alt="Image Preview" class="w-full h-auto rounded shadow-md" />

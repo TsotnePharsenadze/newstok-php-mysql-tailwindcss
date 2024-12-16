@@ -48,6 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = "UPDATE news SET title='$title', description='$description', text='$text', keywords='$keywords', time='$time', sts='$sts', tag_ids='$tagIdsToStr', updatedAt=current_timestamp() WHERE id='$id' AND author_id='$authorId'";
 
     if ($conn->query($sql) === TRUE) {
+        $gallery = $conn->query("SELECT sts FROM gallery WHERE news_id='$id'");
+        $galleryId = $gallery->num_rows > 0 ? $gallery->fetch_assoc()["sts"] : null;
+        if ($galleryId != $sts) {
+            $conn->query("UPDATE gallery SET sts='$sts', updatedAt=current_timestamp() WHERE news_id='$id'");
+        }
         if (strpos($ref, "?")) {
             $ref .= "&msg=News Edited Successfully";
         } else {
