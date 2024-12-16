@@ -7,7 +7,7 @@ $includeSlider = true;
 //EndLayout Configuration
 
 if (!isset($_SESSION["menu"])) {
-    $result = $conn->query("SELECT * FROM menu ORDER BY ord ASC");
+    $result = $conn->query("SELECT * FROM menu WHERE sts=2 ORDER BY ord ASC");
     $menuArray = [];
     while ($row = $result->fetch_assoc()) {
         array_push($menuArray, $row);
