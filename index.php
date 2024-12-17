@@ -1,6 +1,22 @@
 <?php
 include("db/db.php");
+function deduplicateNews($nestedArray)
+{
+    $uniqueIds = [];
+    $result = [];
 
+    foreach ($nestedArray as $key => $newsGroup) {
+        $result[$key] = array_filter($newsGroup, function ($news) use (&$uniqueIds) {
+            if (in_array($news['id'], $uniqueIds)) {
+                return false;
+            }
+            $uniqueIds[] = $news['id'];
+            return true;
+        });
+    }
+
+    return $result;
+}
 //Layout Configuration
 $title = "Newstok";
 $includeSlider = true;
@@ -16,6 +32,7 @@ if (!isset($_SESSION["menu"])) {
 }
 
 $resultLatest = $conn->query("SELECT * FROM news WHERE sts=2 ORDER BY createdAt DESC");
+
 $query = "SELECT id, tag_ids FROM news WHERE sts=2 ORDER BY createdAt DESC LIMIT 20";
 $result = $conn->query($query);
 
@@ -75,6 +92,10 @@ if (!empty($topTags)) {
         }
     }
 }
+$newsForTopTags = deduplicateNews($newsForTopTags);
+// echo "<pre>";
+// var_dump($newsForTopTags);
+// echo "</pre>";
 ?>
 <?php
 include("./layout/header.php");
@@ -120,7 +141,7 @@ include("./layout/header.php");
     <section>
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold mb-4">Latest News</h2>
-            <a href="#" class="text-blue-500 hover:underline">&plus; See All</a>
+            <a href="#" class="text-blue-500 hover:underline">&#8608; See more</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php
@@ -162,9 +183,23 @@ include("./layout/header.php");
             <section>
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold mb-2"><?php echo htmlspecialchars($tagNames[$tagId] ?? "Unknown"); ?></h3>
+                    <?php
+                    if (isset($newsArray)) {
+                        if (count($newsArray) > 3) { ?>
+                            <a href="<?php echo "categories/index.php?id=$tagId" ?>" class="text-blue-500 hover:underline">&#8608; See
+                                more
+                            </a>
+                        <?php }
+                    }
+                    ?>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <?php foreach ($newsArray as $news): ?>
+                    <?php
+                    $i = 0;
+                    foreach ($newsArray as $news):
+                        if ($i >= 3)
+                            break; 
+                        ?>
                         <article class="bg-white rounded-lg shadow-md overflow-hidden">
                             <img src="<?php echo htmlspecialchars($news['thumbnail'] ?? 'https://via.placeholder.com/800x400'); ?>"
                                 class="w-full" />
@@ -175,8 +210,12 @@ include("./layout/header.php");
                                     class="text-blue-600 font-semibold hover:underline">Read More</a>
                             </div>
                         </article>
-                    <?php endforeach; ?>
+                        <?php
+                        $i++;
+                    endforeach;
+                    ?>
                 </div>
+
             </section>
             <br />
             <hr /><br />
