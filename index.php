@@ -115,7 +115,7 @@ include("./layout/header.php");
 <main class="container mx-auto px-4 py-8">
     <section class="mb-8">
         <h2 class="text-2xl font-bold mb-4">Featured Headlines</h2>
-        <swiper-container class="mySwiper" navigation="true" pagination="true" keyboard="true" mousewheel="true"
+        <swiper-container class="mySwiper w-[1000px] mx-auto" navigation="true" pagination="true" keyboard="true" mousewheel="true"
             css-mode="true">
 
             <?php
@@ -136,8 +136,8 @@ include("./layout/header.php");
                         } else {
                             echo $row["thumbnail"];
                         }
-                        ?>" class="w-full" />
-                        <div class="p-6">
+                        ?>" class="w-[1000px] mx-auto" />
+                        <div class="p-6 w-[1000px] mx-auto">
                             <h3 class="text-xl font-bold mb-2"><?php echo $row["title"] ?></h3>
                             <p class="text-gray-700 mb-4"><?php echo $row["description"] ?></p>
                             <a href="posts?id=<?php echo $row["id"] ?>" class="text-blue-600 font-semibold hover:underline">Read
@@ -153,7 +153,7 @@ include("./layout/header.php");
     <section>
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold mb-4">Latest News</h2>
-            <a href="#" class="text-blue-500 hover:underline">&#8608; See more</a>
+            <a href="/category/" class="text-blue-500 hover:underline">&#8608; See more</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php
