@@ -1,8 +1,15 @@
 <?php
 include("db/db.php");
 
+$category;
+$tagId = $_GET["category"];
+if (isset($tagId)) {
+    $result = $conn->query("SELECT * FROM tags WHERE id=$tagId");
+    $category = $result->fetch_assoc();
+}
+
 // Layout Configuration
-$title = "Newstok - Gallery";
+$title = "Newstok - " . (isset($tagId) ? $category["name"] : "Category");
 $includeSlider = true;
 // End Layout Configuration
 
@@ -18,20 +25,7 @@ if (!isset($_SESSION["menu"])) {
 }
 
 $newsData = [];
-$result = $conn->query("SELECT id, title, thumbnail, createdAt FROM news WHERE sts=2 ORDER BY createdAt DESC");
-// echo "<pre>";
-// var_dump($result->fetch_all());
-// echo "</pre>";
-while ($row = $result->fetch_assoc()) {
-    $monthYear = date('F Y', strtotime($row['createdAt']));
-
-    if (!isset($newsData[$monthYear])) {
-        $newsData[$monthYear] = [];
-    }
-
-    $newsData[$monthYear][] = $row;
-}
-
+$result = $conn->query("SELECT * FROM tags WHERE sts='2'");
 ?>
 
 <?php
@@ -39,7 +33,7 @@ include("./layout/header.php");
 ?>
 
 <main class="container mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-4">Gallery</h2>
+    <h2 class="text-2xl font-bold mb-4">Category</h2>
 
     <?php
     foreach ($newsData as $monthYear => $articles) {

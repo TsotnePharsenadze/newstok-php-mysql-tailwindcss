@@ -72,7 +72,7 @@ if (isset($_GET['id'])) {
                             class="w-full p-2 border border-gray-300 rounded-md" required>
                     </div>
                     <button type="submit" name="login"
-                        class="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Login Verify</button>
+                        class="w-full p-2 bg-gray-800 text-white rounded-md hover:bg-gray-600">Login Verify</button>
                 </form>
                 <p class="text-center text-red-400 mt-2 mb-2"><?php if (!empty($err))
                     echo $err; ?></p>

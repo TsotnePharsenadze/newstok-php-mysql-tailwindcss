@@ -1,22 +1,32 @@
 <?php
 include("db/db.php");
-function deduplicateNews($nestedArray)
+function deduplicateNews($nestedArray, $maxPerTag = 3)
 {
     $uniqueIds = [];
+    $tagNewsCount = [];
     $result = [];
 
-    foreach ($nestedArray as $key => $newsGroup) {
-        $result[$key] = array_filter($newsGroup, function ($news) use (&$uniqueIds) {
+    foreach ($nestedArray as $tagId => $newsGroup) {
+        $tagNewsCount[$tagId] = 0;
+
+        $result[$tagId] = array_filter($newsGroup, function ($news) use (&$uniqueIds, &$tagNewsCount, $tagId, $maxPerTag) {
             if (in_array($news['id'], $uniqueIds)) {
                 return false;
             }
+
+            if ($tagNewsCount[$tagId] >= $maxPerTag) {
+                return false;
+            }
+
             $uniqueIds[] = $news['id'];
+            $tagNewsCount[$tagId]++;
             return true;
         });
     }
 
     return $result;
 }
+
 //Layout Configuration
 $title = "Newstok";
 $includeSlider = true;
@@ -92,7 +102,9 @@ if (!empty($topTags)) {
         }
     }
 }
-$newsForTopTags = deduplicateNews($newsForTopTags);
+
+$newsForTopTags = deduplicateNews($newsForTopTags, 3);
+
 // echo "<pre>";
 // var_dump($newsForTopTags);
 // echo "</pre>";
@@ -198,7 +210,7 @@ include("./layout/header.php");
                     $i = 0;
                     foreach ($newsArray as $news):
                         if ($i >= 3)
-                            break; 
+                            break;
                         ?>
                         <article class="bg-white rounded-lg shadow-md overflow-hidden">
                             <img src="<?php echo htmlspecialchars($news['thumbnail'] ?? 'https://via.placeholder.com/800x400'); ?>"

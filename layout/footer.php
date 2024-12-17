@@ -28,7 +28,7 @@ if (!isset($noFooter)) { ?>
                 <p class="text-gray-400">Phone: +1 234 567 890</p>
                 <p class="text-gray-400">Address: 123 News Street, Media City</p>
                 <br />
-                <a href="contact.php" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:opacity-95">Contact
+                <a href="contact.php" class="bg-gray-800 text-white border px-4 py-2 rounded-md hover:opacity-95">Contact
                     Us</a>
             </div>
         </div>

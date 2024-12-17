@@ -71,7 +71,7 @@ include('../layout/header.php');
                     required>
             </div>
             <button type="submit" name="register"
-                class="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Register</button>
+                class="w-full p-2 bg-gray-800 text-white rounded-md hover:bg-gray-600">Register</button>
 
         </form>
         <p class="text-center text-red-400 mt-2 mb-2"><?php if (!empty($err))

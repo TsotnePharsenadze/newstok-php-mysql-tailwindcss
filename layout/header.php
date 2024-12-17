@@ -13,7 +13,7 @@
 </head>
 
 <body class="bg-gray-100">
-    <header class="bg-blue-600 text-white py-4 shadow-md">
+    <header class="bg-gray-800 text-white py-4 shadow-md">
         <div class="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between items-center">
             <div class="flex justify-between items-center w-full">
                 <a class="text-2xl font-bold" href="/index.php">NewsTok</a>
