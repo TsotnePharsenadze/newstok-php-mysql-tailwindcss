@@ -39,6 +39,9 @@ if (!isset($_SESSION['user_id'])) {
                 <a href="contact"
                     class="w-[150px] h-[100px] bg-green-600 text-white text-center pt-[23%] hover:opacity-80 relative">Contact<i
                         class="fa-solid fa-fill absolute -bottom-[10px] -right-[10px] text-6xl opacity-60"></i></a>
+                <a href="users"
+                    class="col-span-2 h-[100px] bg-rose-600 text-white text-center pt-[13%] hover:opacity-80 relative">Users<i
+                        class="fa-solid fa-user absolute -bottom-[10px] -right-[10px] text-6xl opacity-60"></i></a>
             </main>
         </div>
     </div>

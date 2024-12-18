@@ -1,6 +1,8 @@
 <?php
 include("db/db.php");
 
+session_start();
+
 //Layout Configuration
 $title = "Newstok - Contact Us";
 $includeSlider = true;
@@ -67,7 +69,7 @@ include("./layout/header.php");
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-gray-800 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    class="w-full bg-gray-800 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Submit
                 </button>
                 <p class="text-center text-red-400 mt-2 mb-2"><?php if (!empty($err))

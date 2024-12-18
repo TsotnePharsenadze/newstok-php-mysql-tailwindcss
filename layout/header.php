@@ -30,9 +30,9 @@
                 ?>
                 <div class="border flex items-center rounded-md">
                     <a href="<?php echo $buttonLogin ?? "./portal/login.php" ?>"
-                        class="hover:bg-blue-400 p-2 border-r">Login</a>
+                        class="hover:bg-gray-400 p-2 border-r">Login</a>
                     <a href="<?php echo $buttonRegister ?? "./portal/register.php" ?>"
-                        class="hover:bg-blue-400 p-2">Register</a>
+                        class="hover:bg-gray-400 p-2">Register</a>
                 </div>
             </nav>
         </div>

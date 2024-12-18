@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             $_SESSION["username"] = $user["username"];
             $_SESSION["display_name"] = $user["display_name"];
             $_SESSION["type"] = $user["type"];
+            $conn->query("UPDATE users SET login_time=current_timestamp()");
             header("Location: dashboard.php");
         } else {
             $err = "Incorrect credentials.";
