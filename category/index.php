@@ -67,7 +67,7 @@ include("../layout/header.php");
                                 <div class="p-4">
                                     <h3 class="font-bold mb-2"><?php echo $row["title"] ?></h3>
                                     <p class="text-gray-700 mb-4"><?php echo $row["description"] ?></p>
-                                    <a href="posts?id=<?php echo $row["id"] ?>" class="text-blue-600 font-semibold hover:underline">Read
+                                    <a href="../posts?id=<?php echo $row["id"] ?>" class="text-blue-600 font-semibold hover:underline">Read
                                         More</a>
                                 </div>
                             </article>
