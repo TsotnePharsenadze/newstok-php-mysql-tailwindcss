@@ -4,60 +4,60 @@ unset($_SESSION["HTTP_REFERER"]);
 include('../../../db/db.php');
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../login.php");
+    header("Location: ../login.php");
     exit();
 }
 
 $author_id = $_SESSION['user_id'];
 
-$limit = isset($_GET["pageSizeMenu"]) ? (int) $_GET["pageSizeMenu"] : 5;
+$limit = isset($_GET["pageSizeUsers"]) ? (int) $_GET["pageSizeUsers"] : 5;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-$searchMenu = isset($_GET["searchMenu"]) ? $_GET["searchMenu"] : "";
+$searchUsers = isset($_GET["searchUsers"]) ? $_GET["searchUsers"] : "";
 
 $sort_column = isset($_GET['sort']) ? $_GET['sort'] : 'createdAt';
 $sort_order = isset($_GET['order']) ? $_GET['order'] === 'desc' ? 'DESC' : 'ASC' : "DESC";
 
-$sortable_columns = ['id', 'name', 'ord', 'url', 'sts', 'createdAt', 'updatedAt', "delete_date", "recovery_date"];
+$sortable_columns = ["username", "password", "type", "login_time", "sts", "display_name", "email", "createdAt", "updatedAt", "delete_date", "recovery_date"];
 if (!in_array($sort_column, $sortable_columns)) {
     $sort_column = 'createdAt';
 }
 
-$query = "SELECT * FROM menu WHERE sts = '3' AND (
-    id LIKE '%$searchMenu%' 
-    OR name LIKE '%$searchMenu%' ";
+$query = "SELECT * FROM users WHERE sts = '3' AND (
+          username LIKE '%$searchUsers%' 
+          OR type LIKE '%$searchUsers%' ";
 
-if ($searchMenu == "unlisted" or $searchMenu == "published") {
-    $searchMenuSts = $searchMenu == "unlisted" ? 1 : 2;
-    $query .= " OR sts LIKE '%$searchMenuSts%'";
+if ($searchUsers == "pending" or $searchUsers == "approved") {
+    $searchUsersSts = $searchUsers == "pending" ? 1 : 2;
+    $query .= " OR sts LIKE '%$searchUsersSts%'";
 }
 
-$query .= " OR url LIKE '%$searchMenu%' 
-OR ord LIKE '%$searchMenu%' 
-OR createdAt LIKE '%$searchMenu%' 
-OR updatedAt LIKE '%$searchMenu%' 
-OR delete_date LIKE '%$searchMenu%' 
-OR recovery_date LIKE '%$searchMenu%'
+$query .= " OR display_name LIKE '%$searchUsers%' 
+OR email LIKE '%$searchUsers%' 
+OR createdAt LIKE '%$searchUsers%' 
+OR updatedAt LIKE '%$searchUsers%' 
+OR delete_date LIKE '%$searchUsers%' 
+OR recovery_date LIKE '%$searchUsers%'
 ) ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
 
 $result = $conn->query($query);
 
-$total_query = "SELECT COUNT(*) as total FROM menu WHERE sts = '3' AND (
-id LIKE '%$searchMenu%' 
-OR name LIKE '%$searchMenu%' ";
+$total_query = "SELECT COUNT(*) as total FROM users WHERE sts = '3' AND (
+    username LIKE '%$searchUsers%' 
+    OR password LIKE '%$searchUsers%' ";
 
-if ($searchMenu == "unlisted" or $searchMenu == "published") {
-    $searchMenuSts = $searchMenu == "unlisted" ? 1 : 2;
-    $total_query .= " OR sts LIKE '%$searchMenuSts%'";
+if ($searchUsers == "pending" or $searchUsers == "approved") {
+    $searchUsersSts = $searchUsers == "pending" ? 1 : 2;
+    $total_query .= " OR sts LIKE '%$searchUsersSts%'";
 }
 
-$total_query .= " OR url LIKE '%$searchMenu%' 
-OR ord LIKE '%$searchMenu%' 
-OR createdAt LIKE '%$searchMenu%' 
-OR updatedAt LIKE '%$searchMenu%' 
-OR delete_date LIKE '%$searchMenu%' 
-OR recovery_date LIKE '%$searchMenu%'
+$total_query .= " OR display_name LIKE '%$searchUsers%' 
+OR email LIKE '%$searchUsers%' 
+OR createdAt LIKE '%$searchUsers%' 
+OR updatedAt LIKE '%$searchUsers%' 
+OR delete_date LIKE '%$searchUsers%' 
+OR recovery_date LIKE '%$searchUsers%'
 ) ORDER BY $sort_column $sort_order LIMIT $limit OFFSET $offset";
 
 $total_result = $conn->query($total_query);
@@ -74,7 +74,7 @@ $total_pages = ceil($total_records / $limit);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newstoks - Deleted Menu index</title>
+    <title>Newstoks - Deleted Users index</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
         integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
@@ -110,7 +110,7 @@ $total_pages = ceil($total_records / $limit);
 
             const url = new URL(window.location.href);
 
-            url.searchParams.set("pageSizeMenu", index);
+            url.searchParams.set("pageSizeUsers", index);
 
             window.location.href = url.toString();
         }
@@ -118,8 +118,8 @@ $total_pages = ceil($total_records / $limit);
         function searchQuery() {
             const url = new URL(window.location.href);
 
-            let value = document.querySelector("input[name='searchMenu']").value;
-            url.searchParams.set("searchMenu", value);
+            let value = document.querySelector("input[name='searchUsers']").value;
+            url.searchParams.set("searchUsers", value);
 
             window.location.href = url.toString();
         }
@@ -145,8 +145,8 @@ $total_pages = ceil($total_records / $limit);
         <div>
             <div class="flex justify-between items-center mb-6">
                 <div class="flex gap-4 items-centers flex-col sm:flex-row">
-                    <h2 class="text-2xl font-bold">Deleted Menu List 🧲</h2>
-                    <select name="pageSizeMenu" onchange="handlePageSizeSubmit(event, 1)"
+                    <h2 class="text-2xl font-bold">Users List 👥</h2>
+                    <select name="pageSizeUsers" onchange="handlePageSizeSubmit(event, 1)"
                         class="p-[0.3rem_0.7rem_0.3rem_0.7rem] text-lg border-[2px] border-black rounded-md font-semibold">
                         <option value="5" <?php echo $limit == 5 ? "selected" : ""; ?>>5 Records
                         </option>
@@ -161,15 +161,15 @@ $total_pages = ceil($total_records / $limit);
                     </select>
                 </div>
                 <div class="flex items-center">
-                    <input type="search" name="searchMenu" class="p-2 border-black border-[2px] rounded-md w-[300px]"
-                        placeholder="Search for Menu" value="<?php echo $searchMenu; ?>" />
+                    <input type="search" name="searchUsers" class="p-2 border-black border-[2px] rounded-md w-[300px]"
+                        placeholder="Search for Users" value="<?php echo $searchUsers; ?>" />
                     <button onclick="searchQuery()"
                         class="border-[2px] border-black bg-blue-500 text-white p-[0.5rem_0.9rem_0.5rem_0.9rem] ml-2 rounded-full hover:opacity-80 cursor-pointer">
                         <i class="fa-solid fa-search"></i></button>
                 </div>
                 <div class="flex gap-2">
                     <a href="<?php if ($total_records > 0) {
-                        echo "hard_delete_Menu.php";
+                        echo "hard_delete_users.php";
                     } else {
                         echo "javascript:void(0)";
                     } ?>" class="bg-rose-500 text-white px-4 py-2 rounded-md <?php if ($total_records == 0) {
@@ -186,11 +186,11 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('id', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('email', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        Id
+                                        Email
                                     </a>
-                                    <?php if ($sort_column == "id") {
+                                    <?php if ($sort_column == "email") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -200,11 +200,25 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('name', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('username', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        Name
+                                        Username
                                     </a>
-                                    <?php if ($sort_column == "name") {
+                                    <?php if ($sort_column == "username") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('password', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Password
+                                    </a>
+                                    <?php if ($sort_column == "password") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -215,25 +229,11 @@ $total_pages = ceil($total_records / $limit);
                             <th class="border p-4 text-left">
                                 <div class="flex justify-between items-center">
                                     <a href="javascript:void(0)"
-                                        onClick="sortTable('url', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        onClick="sortTable('type', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
                                         class="text-blue-500 w-full">
-                                        Url
+                                        Type
                                     </a>
-                                    <?php if ($sort_column == "url") {
-                                        echo $sort_order === "ASC"
-                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
-                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
-                                    } ?>
-                                </div>
-                            </th>
-                            <th class="border p-4 text-left">
-                                <div class="flex justify-between items-center">
-                                    <a href="javascript:void(0)"
-                                        onClick="sortTable('ord', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
-                                        class="text-blue-500 w-full">
-                                        Order
-                                    </a>
-                                    <?php if ($sort_column == "ord") {
+                                    <?php if ($sort_column == "type") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -248,6 +248,34 @@ $total_pages = ceil($total_records / $limit);
                                         Status
                                     </a>
                                     <?php if ($sort_column == "sts") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('login_time', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Last Time Online
+                                    </a>
+                                    <?php if ($sort_column == "login_time") {
+                                        echo $sort_order === "ASC"
+                                            ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
+                                            : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
+                                    } ?>
+                                </div>
+                            </th>
+                            <th class="border p-4 text-left">
+                                <div class="flex justify-between items-center">
+                                    <a href="javascript:void(0)"
+                                        onClick="sortTable('display_name', '<?php echo $sort_order === 'ASC' ? 'desc' : 'asc'; ?>')"
+                                        class="text-blue-500 w-full">
+                                        Display Name
+                                    </a>
+                                    <?php if ($sort_column == "display_name") {
                                         echo $sort_order === "ASC"
                                             ? "<span class='text-xl font-bold text-blue-500'>&uarr;</span>"
                                             : "<span class='text-xl font-bold text-blue-500'>&darr;</span>";
@@ -317,14 +345,17 @@ $total_pages = ceil($total_records / $limit);
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td class="border p-4"><?php echo $row["id"]; ?></td>
-                                <td class="border p-4"><?php echo $row["name"]; ?></td>
-                                <td class="border p-4"><?php echo $row["url"]; ?></td>
-                                <td class="border p-4"><?php echo $row["ord"]; ?></td>
+                                <td class="border p-4"><?php echo $row["email"]; ?></td>
+                                <td class="border p-4"><?php echo $row["username"]; ?></td>
+                                <td class="border p-4 max-w-[200px] overflow-x-auto"><?php echo $row["password"]; ?></td>
+                                <td class="border p-4"><?php echo ucfirst($row["type"]); ?></td>
                                 <td class="border p-4">
                                     <span
-                                        class="bg-rose-100 text-rose-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">delete</span>
+                                        class="<?php echo $row['sts'] == 1 ? "bg-blue-100 text-blue-800" : "bg-green-100 text-green-800"; ?> font-medium me-2 px-2.5 py-0.5 rounded uppercase"><?php echo $row['sts'] == 1 ? "Pending" : "Approved"; ?></span>
                                 </td>
+                                <td class="border p-4"><?php echo $row["login_time"]; ?></td>
+                                <td class="border p-4"><?php echo $row["display_name"]; ?></td>
+
                                 <td class="border p-4"><?php echo explode(".", $row['createdAt'])[0]; ?></td>
                                 <td class="border p-4"><?php echo explode(".", $row['updatedAt'])[0]; ?></td>
                                 <td class="border p-4">
@@ -342,9 +373,9 @@ $total_pages = ceil($total_records / $limit);
                                     } ?>
                                 </td>
                                 <td class="border p-4">
-                                    <a href="recover_menu.php?id=<?php echo $row['id']; ?>"
+                                    <a href="recover_user.php?id=<?php echo $row['id']; ?>"
                                         class="text-green-500 hover:underline">Recover</a> |
-                                    <a href="hard_delete_menu.php?id=<?php echo $row['id']; ?>"
+                                    <a href="hard_delete_users.php?id=<?php echo $row['id']; ?>"
                                         class="text-red-500 hover:underline">Delete Permanently</a>
                                 </td>
                             </tr>
@@ -377,9 +408,9 @@ $total_pages = ceil($total_records / $limit);
         </nav>
     </div>
     <script>
-        let searchMenuInput = document.querySelector("input[name='searchMenu']");
-        searchMenuInput.addEventListener("input", () => {
-            if (searchMenuInput.value === "") {
+        let searchUsersInput = document.querySelector("input[name='searchUsers']");
+        searchUsersInput.addEventListener("input", () => {
+            if (searchUsersInput.value === "") {
                 searchQuery();
             }
         })

@@ -12,11 +12,11 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("DELETE FROM Menu WHERE id = $id");
+    $conn->query("DELETE FROM users WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Menu Deleted Successfully";
+        $ref .= "&msg=Users Deleted Successfully";
     } else {
-        $ref .= "?msg=Menu Deleted Successfully";
+        $ref .= "?msg=Users Deleted Successfully";
     }
     header("Location: $ref");
 } else if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
@@ -31,8 +31,8 @@ if (isset($_GET['id'])) {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            $conn->query("DELETE FROM Menu WHERE sts='3'");
-            header("Location: deleted_menu.php?msg=All Deleted Menu Items Deleted Permanently");
+            $conn->query("DELETE FROM users WHERE sts='3'");
+            header("Location: deleted_users.php?msg=All Deleted Users Deleted Permanently");
         } else {
             $err = "Incorrect credentials.";
         }
@@ -56,7 +56,7 @@ if (isset($_GET['id'])) {
 
     <div class="min-h-screen w-full flex justify-center items-center">
         <div class="flex-col w-[400px]">
-            <a href="deleted_menu.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
+            <a href="deleted_Users.php" class="text-blue-400 hover:underline mb-2">&lBarr; Go back</a>
             <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full mt-4">
                 <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
                 <form action="" method="POST">
@@ -71,8 +71,8 @@ if (isset($_GET['id'])) {
                             class="w-full p-2 border border-gray-300 rounded-md" required>
                     </div>
                     <button type="submit" name="login"
-                    class="w-full p-2 bg-gray-800 text-white rounded-md hover:bg-gray-600">Login Verify</button>
-                    </form>
+                        class="w-full p-2 bg-gray-800 text-white rounded-md hover:bg-gray-600">Login Verify</button>
+                </form>
                 <p class="text-center text-red-400 mt-2 mb-2"><?php if (!empty($err))
                     echo $err; ?></p>
                 <hr />

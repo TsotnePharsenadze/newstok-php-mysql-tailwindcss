@@ -14,11 +14,11 @@ $author_id = $_SESSION["user_id"];
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("UPDATE menu SET sts='1', recovery_date=current_timestamp() WHERE id = $id");
+    $conn->query("UPDATE users SET sts='1', recovery_date=current_timestamp() WHERE id = $id");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Menu Recovered Successfully";
+        $ref .= "&msg=User Recovered Successfully";
     } else {
-        $ref .= "?msg=Menu Recovered Successfully";
+        $ref .= "?msg=User Recovered Successfully";
     }
     header("Location: $ref");
 }
