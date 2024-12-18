@@ -377,7 +377,7 @@ $total_pages = ceil($total_records / $limit);
                                     <?php } ?>
                                     <a href="users-crud/edit_users.php?id=<?php echo $row['id']; ?>"
                                         class="text-blue-500 hover:underline">Edit</a> |
-                                    <a href="users-crud/delete_users.php?id=<?php echo $row['id']; ?>"
+                                    <a href="users-crud/delete_user.php?id=<?php echo $row['id']; ?>"
                                         class="text-red-500 hover:underline">Delete</a>
                                 </td>
                             </tr>

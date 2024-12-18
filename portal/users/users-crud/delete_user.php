@@ -14,11 +14,11 @@ $author_id = $_SESSION["user_id"];
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $conn->query("UPDATE menu SET sts='3', delete_date=current_timestamp() WHERE id = '$id'");
+    $conn->query("UPDATE users SET sts='3', delete_date=current_timestamp() WHERE id = '$id'");
     if (strpos($ref, "?")) {
-        $ref .= "&msg=Menu Deleted Successfully";
+        $ref .= "&msg=User Deleted Successfully";
     } else {
-        $ref .= "?msg=Menu Deleted Successfully";
+        $ref .= "?msg=User Deleted Successfully";
     }
     header("Location: $ref");
 }

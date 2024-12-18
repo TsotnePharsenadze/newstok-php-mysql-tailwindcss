@@ -12,20 +12,22 @@ $_SESSION["HTTP_REFERER"] = $ref;
 
 $err = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST["name"];
-    $url = $_POST["url"][0] == "/" ? $_POST["url"] : "/" . $_POST["url"];
-    $ord = intval($_POST["ord"]);
-    $sts = intval($_POST["sts"]);
+    $email = $_POST["email"];
+    $username = $_POST["username"];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $type = $_POST["type"];
+    $sts = (int) $_POST["sts"];
+    $display_name = $_POST["display_name"];
 
-    $stmt = $conn->prepare("INSERT INTO menu (name, url, sts, ord) 
-                                    VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssii", $name, $url, $sts, $ord);
+    $stmt = $conn->prepare("INSERT INTO users (email, username, password, type, sts, display_name) 
+                                    VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssis", $email, $username, $password, $type, $sts, $display_name);
 
     if ($stmt->execute()) {
         if (strpos($ref, "?")) {
-            $ref .= "&msg=Menu item Created Successfully";
+            $ref .= "&msg=User Created Successfully";
         } else {
-            $ref .= "?msg=Menu item Created Successfully";
+            $ref .= "?msg=User Created Successfully";
         }
         unset($_SESSION["HTTP_REFERER"]);
         header("Location: $ref");
@@ -43,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Newstok - Create Menu</title>
+    <title>Newstok - Create User</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function goBack() {
@@ -57,19 +59,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
             <a href="javascript:goBack()" class="text-blue-400 hover:underline">&lBarr; Go back</a>
             <hr class="mt-2 mb-2" />
-            <h2 class="text-xl font-bold mb-4">Create Menu Item</h2>
+            <h2 class="text-xl font-bold mb-4">Create User Item</h2>
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="name" id="name" class="p-2 mr-2 border rounded-md w-full" required>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="text" name="email" id="email" class="p-2 mr-2 border rounded-md w-full" required>
                 </div>
                 <div class="mb-4">
-                    <label for="url" class="block text-sm font-medium text-gray-700">Url</label>
-                    <input type="text" name="url" id="url" class="p-2 mr-2 border rounded-md w-full" required>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" name="username" id="username" class="p-2 mr-2 border rounded-md w-full" required>
                 </div>
                 <div class="mb-4">
-                    <label for="ord" class="block text-sm font-medium text-gray-700">Order</label>
-                    <input type="number" name="ord" id="ord" class="p-2 mr-2 border rounded-md w-full" min="1" required>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" name="password" id="password" class="p-2 mr-2 border rounded-md w-full"
+                        required>
+                </div>
+                <div class="mb-4">
+                    <label for="display_name" class="block text-sm font-medium text-gray-700">Display Name</label>
+                    <input type="text" name="display_name" id="display_name" class="p-2 mr-2 border rounded-md w-full"
+                        required>
                 </div>
                 <div class="mb-4">
                     <label for="sts" class="block text-sm font-medium text-gray-700">Status</label>
@@ -78,12 +86,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <input type="radio" name="sts" id="sts1" class="p-2 mr-2 border rounded-md" value="1"
                                 checked>
                             <label for="sts1"><span
-                                    class="bg-blue-100 text-blue-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Unlisted</span></label>
+                                    class="bg-blue-100 text-blue-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Pending</span></label>
                         </div>
                         <div class="flex">
                             <input type="radio" name="sts" id="sts2" class="p-2 mr-2 border rounded-md" value="2">
                             <label for="sts2"><span
-                                    class="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Published</span></label>
+                                    class="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Approved</span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="sts" class="block text-sm font-medium text-gray-700">Type</label>
+                    <div class="flex">
+                        <div class="flex">
+                            <input type="radio" name="type" id="type1" class="p-2 mr-2 border rounded-md" value="editor"
+                                checked>
+                            <label for="type1"><span
+                                    class="bg-blue-100 text-blue-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Editor</span></label>
+                        </div>
+                        <div class="flex">
+                            <input type="radio" name="type" id="type2" class="p-2 mr-2 border rounded-md" value="admin">
+                            <label for="type2"><span
+                                    class="bg-green-100 text-green-800 font-medium me-2 px-2.5 py-0.5 rounded uppercase">Admin</span></label>
                         </div>
                     </div>
                 </div>
