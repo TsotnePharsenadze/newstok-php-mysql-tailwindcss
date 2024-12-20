@@ -7,6 +7,11 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if ($_SESSION["user_type"] == "editor") {
+    header("Location: ../../dashboard.php");
+    exit();
+}
+
 $ref = $_SESSION["HTTP_REFERER"] ?? $_SERVER["HTTP_REFERER"];
 $_SESSION["HTTP_REFERER"] = $ref;
 

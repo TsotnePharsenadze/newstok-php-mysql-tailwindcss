@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $gallery = $conn->query("SELECT sts FROM gallery WHERE news_id='$id'");
         $galleryId = $gallery->num_rows > 0 ? $gallery->fetch_assoc()["sts"] : null;
         if ($galleryId != $sts) {
-            $conn->query("UPDATE gallery SET sts='$sts', updatedAt=current_timestamp() WHERE news_id='$id'");
+            $conn->query("UPDATE gallery SET sts='$sts', updatedAt=current_timestamp() WHERE news_id='$id' AND author_id='$author_id'");
         }
         if (strpos($ref, "?")) {
             $ref .= "&msg=News Edited Successfully";

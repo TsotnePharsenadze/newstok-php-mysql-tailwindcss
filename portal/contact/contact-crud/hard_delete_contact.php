@@ -9,7 +9,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: ../../login.php");
     exit();
 }
-
+if ($_SESSION["user_type"] == "editor") {
+    header("Location: ../../dashboard.php");
+    exit();
+}
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $conn->query("DELETE FROM contact WHERE id = $id");
